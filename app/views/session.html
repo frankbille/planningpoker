@@ -1,0 +1,55 @@
+<div class="row" ng-show="session">
+    <h1>{{session.title}}</h1>
+
+    <div class="col-md-8">
+        <div ng-show="session.round.state == 'started'">
+            <p>
+                Please select click the card below that you think represents your estimate.
+            </p>
+
+            <div class="card-holder">
+                <span ng-repeat="card in cards">
+                    <div class="card"
+                         ng-class="[card.cssClass, (session.round.cardSelections[user.id] == card.id ? 'card-success' : 'card-primary')]"
+                         ng-click="selectCard(card)"></div>&nbsp;
+                </span>
+            </div>
+        </div>
+
+        <div ng-show="session.round.state == 'ended'">
+            <ul class="media-list">
+                <li ng-repeat="card in session.round.selectedCards | filter:removeEmptyCards | orderBy:'selectors.length':true"
+                    class="media">
+                    <span class="card card-success media-object pull-left" ng-class="card.cssClass"></span>
+
+                    <div class="media-body">
+                        <img ng-repeat="participant in card.selectors | orderBy:'name'"
+                             ng-src="{{participant.pictureUrl}}?sz=44" class="img-circle"
+                             tooltip="{{participant.name}}">
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div ng-hide="session.round.state == 'started'">
+            <button class="btn btn-primary btn-lg btn-block" ng-click="startRound()">Start round</button>
+        </div>
+        <div ng-show="session.round.state == 'started'">
+            <button class="btn btn-lg btn-block btn-danger" ng-click="endRound()">End round</button>
+        </div>
+        <h2>Participants</h2>
+        <ul class="list-group">
+            <li class="list-group-item" ng-class="{'list-group-item-danger': !participant.connections}"
+                ng-repeat="(id,participant) in session.participants | orderBy:'name'">
+                <span class="badge" ng-show="!participant.connections">Offline</span>
+                <span class="badge" ng-show="session.round.cardSelections[id]">card selected</span>
+                <img ng-src="{{participant.pictureUrl}}?sz=24" class="img-circle"> {{participant.name}}
+                <small class="text-muted" ng-show="id==user.id">(You)</small>
+            </li>
+        </ul>
+    </div>
+</div>
+<div ng-hide="session">
+    <h1>Loading...</h1>
+</div>

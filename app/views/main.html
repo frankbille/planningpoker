@@ -1,0 +1,20 @@
+<div class="ng-hide" ng-show="loaded">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <span class="navbar-brand">Planning Poker</span>
+            </div>
+            <ul class="nav navbar-nav navbar-right" ng-show="user">
+                <li class="navbar-text"><img ng-src="{{user.thirdPartyUserData.picture}}?sz=18" height="18" width="18">
+                    {{user.displayName}}
+                </li>
+                <li><a ng-click="logout()">Sign out</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div ui-view class="container"></div>
+</div>
+<div ng-hide="loaded">
+    Loading...
+</div>

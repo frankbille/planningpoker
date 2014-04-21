@@ -1,0 +1,58 @@
+// Import as reference, because we explicitly import vendor.less in the index.html
+@import (reference) "vendor.less";
+
+.card-image(@imagename) {
+  .card-@{imagename} {
+    background-image: url('../images/card_@{imagename}.svg');
+  }
+}
+
+.card-variant(@variant, @card-color) {
+  .card-@{variant} {
+    background-color: @card-color;
+  }
+
+  .card-@{variant}:hover {
+    background-color: darken(@card-color, 8%);
+  }
+}
+
+.card-holder {
+  text-align: justify;
+  font-size: 0.1px;
+}
+
+.card-holder:after {
+  content: '';
+  display: inline-block;
+  width: 100%;
+}
+
+.card {
+  display: inline-block;
+  cursor: pointer;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 62px;
+  height: 88px;
+  border-radius: 4px;
+}
+
+.card-variant(primary, @brand-primary);
+.card-variant(info, @brand-info);
+.card-variant(danger, @brand-danger);
+.card-variant(success, @brand-success);
+.card-variant(warning, @brand-warning);
+
+.card-image(1);
+.card-image(2);
+.card-image(3);
+.card-image(5);
+.card-image(8);
+.card-image(13);
+.card-image(20);
+.card-image(40);
+.card-image(100);
+.card-image(half);
+.card-image(question);

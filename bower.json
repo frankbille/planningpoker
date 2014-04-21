@@ -1,0 +1,26 @@
+{
+  "name": "planningpoker",
+  "version": "0.0.1",
+  "homepage": "https://github.com/frankbille/planningpoker",
+  "authors": [
+    "Frank Bille <github@frankbille.dk>"
+  ],
+  "main": "app/js/app.js",
+  "license": "ASL2",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.2.16",
+    "angular-bootstrap": "~0.10.0",
+    "angular-ui-router": "~0.2.10",
+    "angularfire": "~0.7.1",
+    "bootstrap": "3.1.1",
+    "uuid-js": "~0.7.5"
+  }
+}

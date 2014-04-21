@@ -1,0 +1,22 @@
+<div class="jumbotron">
+    <h1>Planning Poker</h1>
+
+    <p>
+        Planning poker, also called Scrum poker, is a consensus-based technique for estimating, mostly used to estimate
+        effort or relative size of development goals in software development.
+        <a class="text-muted" href="http://en.wikipedia.org/wiki/Planning_poker">
+            <small>Wikipedia</small>
+        </a>
+    </p>
+</div>
+
+<h1>Create new session</h1>
+
+<form role="form" ng-submit="createSession()">
+    <div class="input-group input-group-lg">
+        <input type="text" class="form-control" placeholder="Enter session title" ng-model="name" required autofocus>
+        <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary">Create session</button>
+        </span>
+    </div>
+</form>
