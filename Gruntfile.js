@@ -247,8 +247,8 @@ module.exports = function (grunt) {
         access: 'public-read',
         headers: {
           // Two Year cache policy (1000 * 60 * 60 * 24 * 730)
-          "Cache-Control": "max-age=630720000, public",
-          "Expires": new Date(Date.now() + 63072000000).toUTCString()
+          'Cache-Control': 'max-age=630720000, public',
+          'Expires': new Date(Date.now() + 63072000000).toUTCString()
         },
         gzip: true
       },
@@ -259,9 +259,10 @@ module.exports = function (grunt) {
             dest: 'index.html',
             options: {
               headers: {
-                // No cache of
-                "Cache-Control": "max-age=630720000, public",
-                "Expires": new Date(Date.now() + 63072000000).toUTCString()
+                // No cache of index.html
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': 0
               }
             }
           },
