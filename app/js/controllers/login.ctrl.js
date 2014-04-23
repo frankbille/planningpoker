@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('planningPokerApp').controller('LoginCtrl', function ($scope, $modalInstance) {
+angular.module('planningPokerApp').controller('LoginCtrl', function ($scope, fireAuth, $modalInstance) {
 
   $scope.login = function () {
-    $scope.fireAuth.$login('google').then(function (user) {
-      $modalInstance.close(user);
+    fireAuth.$login('google').then(function () {
+      $modalInstance.close();
     });
   };
 

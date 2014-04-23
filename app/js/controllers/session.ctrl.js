@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('planningPokerApp').controller('SessionCtrl', function ($scope, $firebase, $stateParams) {
+angular.module('planningPokerApp').controller('SessionCtrl', function ($scope, fireRef, fireDb, user, sessionRef, $stateParams) {
   $scope.cards = [];
   $scope.cards.push({id: 'half', cssClass: 'card-half'});
   $scope.cards.push({id: '1', cssClass: 'card-1'});
@@ -14,13 +14,13 @@ angular.module('planningPokerApp').controller('SessionCtrl', function ($scope, $
   $scope.cards.push({id: '100', cssClass: 'card-100'});
   $scope.cards.push({id: 'question', cssClass: 'card-question'});
 
-  var sessionRef = $scope.fireDb.$child($stateParams.sessionId);
   sessionRef.$bind($scope, 'session').then(function () {
-    if (angular.isUndefined($scope.session.participants[$scope.user.id])
-      || angular.isUndefined($scope.session.participants[$scope.user.id].name)) {
-      $scope.session.participants[$scope.user.id].name = $scope.user.displayName;
-      $scope.session.participants[$scope.user.id].email = $scope.user.email;
-      $scope.session.participants[$scope.user.id].pictureUrl = $scope.user.thirdPartyUserData.picture;
+    if (user !== null) {
+      if (angular.isUndefined($scope.session.participants[user.id]) || angular.isUndefined($scope.session.participants[user.id].name)) {
+        $scope.session.participants[user.id].name = user.displayName;
+        $scope.session.participants[user.id].email = user.email;
+        $scope.session.participants[user.id].pictureUrl = user.thirdPartyUserData.picture;
+      }
     }
 
     if (angular.isUndefined($scope.session.round)) {
@@ -49,9 +49,9 @@ angular.module('planningPokerApp').controller('SessionCtrl', function ($scope, $
   };
 
   $scope.selectCard = function (card) {
-    var previousSelectedCard = $scope.session.round.cardSelections[$scope.user.id];
+    var previousSelectedCard = $scope.session.round.cardSelections[user.id];
 
-    $scope.session.round.cardSelections[$scope.user.id] = card.id;
+    $scope.session.round.cardSelections[user.id] = card.id;
 
     if (angular.isUndefined($scope.session.round.selectedCards)) {
       $scope.session.round.selectedCards = [];
@@ -66,7 +66,7 @@ angular.module('planningPokerApp').controller('SessionCtrl', function ($scope, $
     });
 
     if (userCard !== null) {
-      delete userCard.selectors[$scope.user.id];
+      delete userCard.selectors[user.id];
     }
 
     userCard = null;
@@ -86,25 +86,23 @@ angular.module('planningPokerApp').controller('SessionCtrl', function ($scope, $
       userCard.selectors = {};
     }
 
-    userCard.selectors[$scope.user.id] = $scope.session.participants[$scope.user.id];
+    userCard.selectors[user.id] = $scope.session.participants[user.id];
   };
 
   // Presence
-  $scope.$watch('user', function () {
-    if (angular.isDefined($scope.user) && $scope.user !== null) {
-      var userRef = $scope.fireRef.child($stateParams.sessionId + '/participants/' + $scope.user.id);
-      var userConnectionsRef = userRef.child('connections');
-      var lastOnlineRef = userRef.child('lastOnline');
-      var connectedRef = $scope.fireRef.child('.info/connected');
-      connectedRef.on('value', function (snap) {
-        if (snap.val() === true) {
-          var connection = userConnectionsRef.push(true);
+  if (user !== null) {
+    var userRef = fireRef.child($stateParams.sessionId + '/participants/' + user.id);
+    var userConnectionsRef = userRef.child('connections');
+    var lastOnlineRef = userRef.child('lastOnline');
+    var connectedRef = fireRef.child('.info/connected');
+    connectedRef.on('value', function (snap) {
+      if (snap.val() === true) {
+        var connection = userConnectionsRef.push(true);
 
-          connection.onDisconnect().remove();
+        connection.onDisconnect().remove();
 
-          lastOnlineRef.onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
-        }
-      });
-    }
-  });
+        lastOnlineRef.onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
+      }
+    });
+  }
 });
