@@ -13,6 +13,8 @@ module.exports = function (grunt) {
       dist: 'dist'
     },
 
+    aws: grunt.file.readJSON('aws.json'),
+
     jshint: {
       options: pkg.jshintConfig,
       all: [
@@ -234,6 +236,49 @@ module.exports = function (grunt) {
         'copy:styles',
         'copy:svg'
       ]
+    },
+
+    s3: {
+      options: {
+        key: '<%= aws.key %>',
+        secret: '<%= aws.secret %>',
+        bucket: '<%= aws.bucket %>',
+        region: '<%= aws.region %>',
+        access: 'public-read',
+        headers: {
+          // Two Year cache policy (1000 * 60 * 60 * 24 * 730)
+          "Cache-Control": "max-age=630720000, public",
+          "Expires": new Date(Date.now() + 63072000000).toUTCString()
+        },
+        gzip: true
+      },
+      dist: {
+        upload: [
+          {
+            src: '<%= cfg.dist %>/index.html',
+            dest: 'index.html',
+            options: {
+              headers: {
+                // No cache of
+                "Cache-Control": "max-age=630720000, public",
+                "Expires": new Date(Date.now() + 63072000000).toUTCString()
+              }
+            }
+          },
+          {
+            src: '<%= cfg.dist %>/js/*.js',
+            dest: 'js/'
+          },
+          {
+            src: '<%= cfg.dist %>/css/*.css',
+            dest: 'css/'
+          },
+          {
+            src: '<%= cfg.dist %>/images/*.svg',
+            dest: 'images/'
+          }
+        ]
+      }
     }
   });
 
@@ -262,6 +307,16 @@ module.exports = function (grunt) {
     'uglify',
     'rev',
     'usemin'
+  ]);
+
+  grunt.registerTask('upload', [
+    'clean:dist',
+    'build',
+    's3:dist'
+  ]);
+
+  grunt.registerTask('uploadonly', [
+    's3:dist'
   ]);
 
   grunt.registerTask('default', [
