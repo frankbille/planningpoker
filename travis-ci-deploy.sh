@@ -1,11 +1,11 @@
 #!/bin/bash
-branch=$(git symbolic-ref --short -q HEAD)
+export BRANCH=$(git symbolic-ref --short -q HEAD)
 google-cloud-sdk/bin/gcloud auth activate-service-account \
     "${GAE_CLIENT_ACCOUNT}" \
     --key-file gcloudauth.json
 google-cloud-sdk/bin/gcloud \
     --project "${GAE_PROJECT_ID}" \
     preview app deploy \
-    --version "$branch" \
+    --version "${BRANCH}" \
     --quiet \
-    "app.yaml"
+    "dist/app.yaml"

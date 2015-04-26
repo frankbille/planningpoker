@@ -183,8 +183,9 @@ module.exports = function (grunt) {
             '*.{ico,png,txt}',
             'images/*.svg',
             '*.html',
-            'bower_components/**/*',
-            'fonts/*'
+            'fonts/*',
+            'app.yaml',
+            'gae.go'
           ]
         }, {
           expand: true,
