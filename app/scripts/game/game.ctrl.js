@@ -1,28 +1,23 @@
-angular.module('planningpoker').controller('GameCtrl', function ($scope, $cookies, $firebaseObject, $firebaseArray, $stateParams, $state, $mdDialog, $mdBottomSheet) {
-  var appRef = new Firebase('https://planningpokerapp.firebaseio.com');
-
+angular.module('planningpoker').controller('GameCtrl', function ($scope, $cookies, firebase, $stateParams, $state, $mdDialog, $mdBottomSheet) {
   // Start by checking the rights
   if (angular.isDefined($stateParams.managerId)) {
-    var managerRef = appRef.child('managers').child($stateParams.managerId);
-    managerRef.once('value', function(manager) {
-      console.log('check manager');
+    var managerRef = firebase.child('managers').child($stateParams.managerId);
+    managerRef.ref().once('value', function(manager) {
       if (manager.val() == null || manager.val().gameId !== $stateParams.gameId) {
-        console.log('not manager');
         $state.go('game', {
           gameId: $stateParams.gameId,
           participantId: angular.isDefined($stateParams.participantId) ? $stateParams.participantId : null,
           managerId: null
         });
       } else {
-        console.log('manager');
         $scope.isManager = true;
       }
     });
   }
 
   // Load up the game itself
-  var gameRef = appRef.child('games').child($stateParams.gameId);
-  var gameObj = $firebaseObject(gameRef);
+  var gameRef = firebase.child('games').child($stateParams.gameId);
+  var gameObj = gameRef.toFirebaseObject();
   gameObj.$bindTo($scope, 'game');
 
   $scope.cards = [
@@ -42,7 +37,7 @@ angular.module('planningpoker').controller('GameCtrl', function ($scope, $cookie
 
   addShareLinks($scope, $mdDialog, $stateParams);
   addSettingsLink($scope, $mdDialog);
-  addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $mdBottomSheet, $state, $firebaseArray);
+  addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $mdBottomSheet, $state, firebase);
   addStories($scope, $mdDialog, gameRef);
 });
 
@@ -77,7 +72,7 @@ function addSettingsLink($scope, $mdDialog) {
   };
 }
 
-function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $mdBottomSheet, $state, $firebaseArray) {
+function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $mdBottomSheet, $state, firebase) {
   $scope.connectionText = function (participant) {
     if (angular.isDefined(participant.connections)) {
       return 'Connected';
@@ -135,7 +130,7 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $md
 
   // Presence
   var handlePresence = function (participantRef) {
-    participantRef.on('value', function (snap) {
+    participantRef.ref().on('value', function (snap) {
       if (snap.exists() === false) {
         delete $cookies[gameRef.key()];
         $state.go('game', {
@@ -148,10 +143,10 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $md
     });
 
     var myConnectionsRef = participantRef.child('connections');
-    var connectedRef = new Firebase('https://planningpokerapp.firebaseio.com/.info/connected');
-    connectedRef.on('value', function (snap) {
+    var connectedRef = firebase.getInfoConnectedRef();
+    connectedRef.ref().on('value', function (snap) {
       if (snap.val() === true) {
-        var con = myConnectionsRef.push(true);
+        var con = myConnectionsRef.ref().push(true);
         con.onDisconnect().remove();
       }
     });
@@ -160,7 +155,7 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $md
   if (angular.isDefined($cookies[gameRef.key()])) {
     var participantRef = participantsRef.child($cookies[gameRef.key()]);
     handlePresence(participantRef);
-    participantRef.once('value', function (snap) {
+    participantRef.ref().once('value', function (snap) {
       if (snap.exists()) {
         handlePresence(participantRef);
       } else {
@@ -179,7 +174,7 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $md
       focusOnOpen: false,
       escapeToClose: false
     }).then(function (participant) {
-      var participantsDb = $firebaseArray(participantsRef);
+      var participantsDb = participantsRef.toFirebaseArray();
       participantsDb.$add(participant).then(function (participantRef) {
         var participantKey = participantRef.key();
         participantRef.update({

@@ -1,6 +1,6 @@
 angular.module('planningpoker').controller('AddStoriesCtrl', function ($scope, $mdDialog, $firebaseArray, gameRef) {
   $scope.saveStories = function () {
-    var storiesDb = $firebaseArray(gameRef.child('stories'));
+    var storiesDb = gameRef.child('stories').toFirebaseArray();
 
     var stories = $scope.stories.split('\n');
     angular.forEach(stories, function (story) {
