@@ -1,4 +1,4 @@
-angular.module('planningpoker').controller('SessionCtrl', function ($scope, $cookies, $firebaseObject, $firebaseArray, $stateParams, $state, $mdDialog, $mdBottomSheet) {
+angular.module('planningpoker').controller('GameCtrl', function ($scope, $cookies, $firebaseObject, $firebaseArray, $stateParams, $state, $mdDialog, $mdBottomSheet) {
   var appRef = new Firebase('https://planningpokerapp.firebaseio.com');
 
   // Start by checking the rights
@@ -6,10 +6,10 @@ angular.module('planningpoker').controller('SessionCtrl', function ($scope, $coo
     var managerRef = appRef.child('managers').child($stateParams.managerId);
     managerRef.once('value', function(manager) {
       console.log('check manager');
-      if (manager.val() == null || manager.val().sessionId !== $stateParams.sessionId) {
+      if (manager.val() == null || manager.val().gameId !== $stateParams.gameId) {
         console.log('not manager');
-        $state.go('session', {
-          sessionId: $stateParams.sessionId,
+        $state.go('game', {
+          gameId: $stateParams.gameId,
           participantId: angular.isDefined($stateParams.participantId) ? $stateParams.participantId : null,
           managerId: null
         });
@@ -20,10 +20,10 @@ angular.module('planningpoker').controller('SessionCtrl', function ($scope, $coo
     });
   }
 
-  // Load up the session itself
-  var sessionRef = appRef.child('sessions').child($stateParams.sessionId);
-  var sessionObj = $firebaseObject(sessionRef);
-  sessionObj.$bindTo($scope, 'session');
+  // Load up the game itself
+  var gameRef = appRef.child('games').child($stateParams.gameId);
+  var gameObj = $firebaseObject(gameRef);
+  gameObj.$bindTo($scope, 'game');
 
   $scope.cards = [
     0,
@@ -42,14 +42,14 @@ angular.module('planningpoker').controller('SessionCtrl', function ($scope, $coo
 
   addShareLinks($scope, $mdDialog, $stateParams);
   addSettingsLink($scope, $mdDialog);
-  addParticipants($scope, $cookies, $stateParams, $mdDialog, sessionRef, $mdBottomSheet, $state, $firebaseArray);
-  addStories($scope, $mdDialog, sessionRef);
+  addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $mdBottomSheet, $state, $firebaseArray);
+  addStories($scope, $mdDialog, gameRef);
 });
 
 function addShareLinks($scope, $mdDialog, $stateParams) {
   $scope.showShareLinks = function () {
     $mdDialog.show({
-      templateUrl: 'views/session/sharelinksdialog.html',
+      templateUrl: 'views/game/sharelinksdialog.html',
       controller: 'ShareLinksCtrl',
       clickOutsideToClose: true,
       resolve: {
@@ -62,22 +62,22 @@ function addShareLinks($scope, $mdDialog, $stateParams) {
 }
 
 function addSettingsLink($scope, $mdDialog) {
-  $scope.showSessionSettings = function () {
+  $scope.showGameSettings = function () {
     $mdDialog.show({
-      templateUrl: 'views/session/settingsdialog.html',
+      templateUrl: 'views/game/settingsdialog.html',
       controller: 'SettingsDialogCtrl',
       clickOutsideToClose: true,
       focusOnOpen: false,
       resolve: {
-        session: function () {
-          return $scope.session;
+        game: function () {
+          return $scope.game;
         }
       }
     });
   };
 }
 
-function addParticipants($scope, $cookies, $stateParams, $mdDialog, sessionRef, $mdBottomSheet, $state, $firebaseArray) {
+function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $mdBottomSheet, $state, $firebaseArray) {
   $scope.connectionText = function (participant) {
     if (angular.isDefined(participant.connections)) {
       return 'Connected';
@@ -95,7 +95,7 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, sessionRef, 
   };
 
   $scope.isParticipantEditable = function (participant) {
-    return participant.key === $cookies[sessionRef.key()] || $scope.isManager;
+    return participant.key === $cookies[gameRef.key()] || $scope.isManager;
   };
 
   $scope.editParticipant = function (participant) {
@@ -105,7 +105,7 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, sessionRef, 
       dialogScope.email = participant.email;
 
       $mdDialog.show({
-        templateUrl: 'views/session/editparticipant.html',
+        templateUrl: 'views/game/editparticipant.html',
         controller: 'EditParticipantCtrl',
         clickOutsideToClose: true,
         focusOnOpen: false,
@@ -117,10 +117,10 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, sessionRef, 
     }
   };
 
-  var participantsRef = sessionRef.child('participants');
+  var participantsRef = gameRef.child('participants');
   $scope.showParticipantActions = function (participant) {
     $mdBottomSheet.show({
-      templateUrl: 'views/session/moreparticipantactions.html',
+      templateUrl: 'views/game/moreparticipantactions.html',
       controller: 'MoreParticipantActionCtrl',
       resolve: {
         participant: function () {
@@ -137,9 +137,9 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, sessionRef, 
   var handlePresence = function (participantRef) {
     participantRef.on('value', function (snap) {
       if (snap.exists() === false) {
-        delete $cookies[sessionRef.key()];
-        $state.go('session', {
-          sessionId: $stateParams.sessionId,
+        delete $cookies[gameRef.key()];
+        $state.go('game', {
+          gameId: $stateParams.gameId,
           managerId: angular.isDefined($stateParams.managerId) ? $stateParams.managerId : null
         }, {
           reload: true
@@ -157,15 +157,15 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, sessionRef, 
     });
   };
 
-  if (angular.isDefined($cookies[sessionRef.key()])) {
-    var participantRef = participantsRef.child($cookies[sessionRef.key()]);
+  if (angular.isDefined($cookies[gameRef.key()])) {
+    var participantRef = participantsRef.child($cookies[gameRef.key()]);
     handlePresence(participantRef);
     participantRef.once('value', function (snap) {
       if (snap.exists()) {
         handlePresence(participantRef);
       } else {
-        $state.go('session', {
-          sessionId: $stateParams.sessionId,
+        $state.go('game', {
+          gameId: $stateParams.gameId,
           managerId: angular.isDefined($stateParams.managerId) ? $stateParams.managerId : null
         }, {
           reload: true
@@ -174,7 +174,7 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, sessionRef, 
     });
   } else {
     $mdDialog.show({
-      templateUrl: 'views/session/editparticipant.html',
+      templateUrl: 'views/game/editparticipant.html',
       controller: 'EditParticipantCtrl',
       focusOnOpen: false,
       escapeToClose: false
@@ -185,22 +185,22 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, sessionRef, 
         participantRef.update({
           key: participantKey
         });
-        $cookies[sessionRef.key()] = participantKey;
+        $cookies[gameRef.key()] = participantKey;
         handlePresence(participantRef);
       });
     });
   }
 }
 
-function addStories($scope, $mdDialog, sessionRef) {
+function addStories($scope, $mdDialog, gameRef) {
   $scope.addStories = function() {
     $mdDialog.show({
-      templateUrl: 'views/session/addstories.html',
+      templateUrl: 'views/game/addstories.html',
       controller: 'AddStoriesCtrl',
       focusOnOpen: false,
       resolve: {
-        sessionRef: function() {
-          return sessionRef;
+        gameRef: function() {
+          return gameRef;
         }
       }
     });

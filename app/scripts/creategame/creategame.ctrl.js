@@ -1,4 +1,4 @@
-angular.module('planningpoker').controller('CreateSessionCtrl', function($scope, $firebaseObject, $firebaseArray, $state) {
+angular.module('planningpoker').controller('CreateGameCtrl', function($scope, $firebaseObject, $firebaseArray, $state) {
   $scope.progressType = 'determinate';
 
   $scope.create = function() {
@@ -6,18 +6,18 @@ angular.module('planningpoker').controller('CreateSessionCtrl', function($scope,
     $scope.progressType = 'indeterminate';
 
     var dbRef = new Firebase('https://planningpokerapp.firebaseio.com');
-    var sessionsRef = dbRef.child('sessions');
+    var gamesRef = dbRef.child('games');
     var managersRef = dbRef.child('managers');
 
-    var sessionRef = sessionsRef.push({
-      title: angular.isDefined($scope.sessionName) ? $scope.sessionName : null,
+    var gameRef = gamesRef.push({
+      title: angular.isDefined($scope.gameName) ? $scope.gameName : null,
       createdAt: Firebase.ServerValue.TIMESTAMP
     }, function() {
       var managerRef = managersRef.push({
-        sessionId: sessionRef.key()
+        gameId: gameRef.key()
       }, function() {
-        $state.go('session', {
-          sessionId: sessionRef.key(),
+        $state.go('game', {
+          gameId: gameRef.key(),
           managerId: managerRef.key()
         })
       });

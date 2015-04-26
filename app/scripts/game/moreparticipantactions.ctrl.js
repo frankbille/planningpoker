@@ -2,7 +2,7 @@ angular.module('planningpoker').controller('MoreParticipantActionCtrl', function
   $scope.remove = function() {
     var confirm = $mdDialog.confirm()
       .title('Remove '+participant.name+'?')
-      .content('Would you like to remove '+participant.name+' from this planning poker session? ' +
+      .content('Would you like to remove '+participant.name+' from this planning poker game? ' +
       'This is not a blocking of that person because they can join again should they wish to do so.')
       .ok('Remove')
       .cancel('Cancel');

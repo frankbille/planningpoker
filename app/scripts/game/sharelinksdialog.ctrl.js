@@ -1,14 +1,14 @@
 angular.module('planningpoker').controller('ShareLinksCtrl', function($scope, $state, $mdDialog, stateParams) {
-  $scope.sessionLink = $state.href('session', {
-    sessionId: stateParams.sessionId
+  $scope.gameLink = $state.href('game', {
+    gameId: stateParams.gameId
   }, {
     absolute: true,
     inherit: false
   });
 
   if (angular.isDefined(stateParams.managerId)) {
-    $scope.managerLink = $state.href('session', {
-      sessionId: stateParams.sessionId,
+    $scope.managerLink = $state.href('game', {
+      gameId: stateParams.gameId,
       managerId: stateParams.managerId
     }, {
       absolute: true,

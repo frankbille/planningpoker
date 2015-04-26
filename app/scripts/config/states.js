@@ -2,14 +2,14 @@ angular.module('planningpoker').config(function($stateProvider, $urlRouterProvid
   $urlRouterProvider.otherwise('/');
 
   $stateProvider
-    .state('createsession', {
+    .state('creategame', {
       url: '/',
-      templateUrl: 'views/createsession/createsession.html',
-      controller: 'CreateSessionCtrl'
+      templateUrl: 'views/creategame/creategame.html',
+      controller: 'CreateGameCtrl'
     })
-    .state('session', {
-      url: '/:sessionId?managerId',
-      templateUrl: 'views/session/session.html',
-      controller: 'SessionCtrl'
+    .state('game', {
+      url: '/:gameId?managerId',
+      templateUrl: 'views/game/game.html',
+      controller: 'GameCtrl'
     });
 });

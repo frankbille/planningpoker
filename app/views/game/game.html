@@ -1,16 +1,16 @@
-<md-content layout="column" flex ng-show="session.createdAt">
+<md-content layout="column" flex ng-show="game.createdAt">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
-                <span>{{session.title}}</span>
+                <span>{{game.title}}</span>
             </h2>
             <span flex></span>
-            <md-button class="md-icon-button" aria-label="New Session" ui-sref="createsession">
-                <md-tooltip>Create new session</md-tooltip>
+            <md-button class="md-icon-button" aria-label="New game" ui-sref="creategame">
+                <md-tooltip>Create new game</md-tooltip>
                 <md-icon md-svg-icon="action:home" style="color: white"></md-icon>
             </md-button>
-            <md-button class="md-icon-button" aria-label="Settings" ng-show="isManager" ng-click="showSessionSettings()">
-                <md-tooltip>Session settings</md-tooltip>
+            <md-button class="md-icon-button" aria-label="Settings" ng-show="isManager" ng-click="showGameSettings()">
+                <md-tooltip>Game settings</md-tooltip>
                 <md-icon md-svg-icon="action:settings" style="color: white"></md-icon>
             </md-button>
             <md-button class="md-icon-button" aria-label="Share" ng-click="showShareLinks()">
@@ -29,7 +29,7 @@
         <div flex="25" class="md-primary md-hue-1">
             <md-list>
                 <md-subheader>Participants</md-subheader>
-                <md-list-item class="md-2-line" ng-repeat="participant in session.participants" ng-click="editParticipant(participant)" ng-disabled="!isParticipantEditable(participant)">
+                <md-list-item class="md-2-line" ng-repeat="participant in game.participants" ng-click="editParticipant(participant)" ng-disabled="!isParticipantEditable(participant)">
                     <img gravatar-src="participant.email" gravatar-size="60" class="md-avatar">
                     <div class="md-list-item-text">
                         <h3>{{participant.name}}</h3>
@@ -39,7 +39,7 @@
                 </md-list-item>
 
                 <md-subheader>Stories</md-subheader>
-                <md-list-item class="md-2-line" ng-repeat="(storyKey,story) in session.stories" ng-click="editStory(storyKey, story)">
+                <md-list-item class="md-2-line" ng-repeat="(storyKey,story) in game.stories" ng-click="editStory(storyKey, story)">
                     <md-icon md-svg-icon="card:card{{story.score}}"></md-icon>
                     <div class="md-list-item-text">
                         <h3>{{story.title}}</h3>
@@ -53,6 +53,6 @@
         </div>
     </div>
 </md-content>
-<md-content layout layout-fill flex layout-align="center center" ng-hide="session.createdAt">
+<md-content layout layout-fill flex layout-align="center center" ng-hide="game.createdAt">
     <h1 class="md-display-4">Loading...</h1>
 </md-content>
