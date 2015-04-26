@@ -250,14 +250,15 @@ module.exports = function (grunt) {
         src: ['<%= cfg.dist %>/scripts/*.scripts.js'],
         overwrite: true,
         replacements: [{
+          // Use the correct firebase url depending on git branch
           from: 'https://planningpokerapp.firebaseio.com',
-          //to: function() {
-          //  var str = '<%= cfg.dist %>';
-          //  grunt.log.writeln(str);
-          //  //return cfg.firebaseUrls[gitinfo.local.branch.current.name];
-          //  return 'https://planningpokerapp.firebaseio.com';
-          //}
           to: '<%= cfg.firebaseUrls[gitinfo.local.branch.current.name] %>'
+        }, {
+          from: '{SHA}',
+          to: '<%= gitinfo.local.branch.current.SHA %>'
+        }, {
+          from: '{SHA-SHORT}',
+          to: '<%= gitinfo.local.branch.current.shortSHA %>'
         }]
       }
     }

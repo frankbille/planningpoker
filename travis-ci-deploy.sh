@@ -1,4 +1,5 @@
 #!/bin/bash
+git symbolic-ref --short -q HEAD
 export BRANCH=$(git symbolic-ref --short -q HEAD)
 google-cloud-sdk/bin/gcloud auth activate-service-account \
     "${GAE_CLIENT_ACCOUNT}" \

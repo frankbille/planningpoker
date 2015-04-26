@@ -15,6 +15,6 @@ install:
 - google-cloud-sdk/bin/gcloud components update preview app --quiet
 before_script:
 - bower install
-- grunt travis-build
+- grunt travis-build -v
 after_success:
 - "./travis-ci-deploy.sh"
