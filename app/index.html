@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="planningpoker">
+<head>
+    <base href="/">
+    <meta charset="UTF-8">
+    <title>Planning Poker</title>
+    <!-- build:css /styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css /styles/app.css -->
+    <link rel="stylesheet" href="css/app.css" />
+    <!-- endbuild -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+    <meta name="viewport" content="initial-scale=1" />
+</head>
+<body layout>
+
+<div ui-view layout layout-fill></div>
+
+<!-- build:js /scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-messages/angular-messages.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-aria/angular-aria.js"></script>
+<script src="bower_components/angular-material/angular-material.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="bower_components/firebase/firebase.js"></script>
+<script src="bower_components/angularfire/dist/angularfire.js"></script>
+<script src="bower_components/angular-gravatar/build/angular-gravatar.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+<!-- build:js({.tmp,app}) /scripts/scripts.js -->
+<script src="scripts/app.js"></script>
+<script src="scripts/config/states.js"></script>
+<script src="scripts/config/icons.js"></script>
+<script src="scripts/config/gravatar.js"></script>
+<script src="scripts/directives/defaultfocus.directive.js"></script>
+<script src="scripts/createsession/createsession.ctrl.js"></script>
+<script src="scripts/session/session.ctrl.js"></script>
+<script src="scripts/session/editparticipant.ctrl.js"></script>
+<script src="scripts/session/sharelinksdialog.ctrl.js"></script>
+<script src="scripts/session/settingsdialog.ctrl.js"></script>
+<script src="scripts/session/moreparticipantactions.ctrl.js"></script>
+<script src="scripts/session/addstories.ctrl.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>

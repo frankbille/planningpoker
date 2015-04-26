@@ -1,0 +1,28 @@
+<md-dialog>
+    <form name="nameForm" ng-submit="saveParticipant()">
+        <md-content>
+            <md-input-container style="width:400px">
+                <label>Your name</label>
+                <input ng-model="name" name="name" required default-focus>
+
+                <div ng-messages="nameForm.name.$error">
+                    <div ng-message="required">This is required.</div>
+                </div>
+            </md-input-container>
+            <md-input-container style="width:400px">
+                <label>Email for loading Gravatar</label>
+                <input ng-model="email" name="email" type="email">
+
+                <div ng-messages="nameForm.email.$error">
+                    <div ng-message="email">Must provide a valid email.</div>
+                </div>
+            </md-input-container>
+        </md-content>
+        <div class="md-actions" layout="row">
+            <span flex></span>
+            <md-button class="md-primary">
+                Save
+            </md-button>
+        </div>
+    </form>
+</md-dialog>

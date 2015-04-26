@@ -1,0 +1,20 @@
+<md-dialog>
+    <md-content>
+        <h2 class="md-title">Share links</h2>
+        <div class="dialog-content">
+            <p>
+                Share this link with normal participants:<br>
+                <a ng-href="{{sessionLink}}">{{sessionLink}}</a>
+            </p>
+            <p ng-show="managerLink">
+                Share this link with participants that should also be able to manage:<br>
+                <a ng-href="{{managerLink}}">{{managerLink}}</a>
+            </p>
+        </div>
+    </md-content>
+    <div class="md-actions" layout="row">
+        <md-button ng-click="close()">
+            Close
+        </md-button>
+    </div>
+</md-dialog>

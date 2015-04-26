@@ -1,0 +1,14 @@
+<md-content layout="row" layout-padding layout-fill layout-align="center center">
+    <form layout="column" ng-submit="create()">
+        <md-input-container style="width:400px">
+            <label>Enter session name (optional)</label>
+            <input ng-model="sessionName" ng-disabled="creating" default-focus>
+        </md-input-container>
+
+        <md-button class="md-raised md-primary" ng-disabled="creating">Create session</md-button>
+
+        <br><br><br><br><br><br>
+
+        <md-progress-linear md-mode="{{progressType}}" value="0"></md-progress-linear>
+    </form>
+</md-content>

@@ -1,0 +1,18 @@
+.moreMenu .md-grid-item-content {
+    height: 96px;
+}
+
+.moreMenu .md-grid-item-content md-icon {
+    height: 48px;
+    width: 48px;
+}
+
+.moreMenu .md-grid-text {
+    padding-bottom: 5px;
+}
+
+.card-button {
+    height: 64px;
+    min-width: 64px;
+    font-size: 1.5em;
+}
