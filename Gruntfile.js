@@ -248,7 +248,7 @@ module.exports = function (grunt) {
         overwrite: true,
         replacements: [{
           // Use the correct firebase url depending on git branch
-          from: 'https://planningpokerapp.firebaseio.com',
+          from: 'https://planningpokerappdev.firebaseio.com',
           to: '<%= cfg.firebaseUrl %>'
         }, {
           from: '{SHA}',

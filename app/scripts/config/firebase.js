@@ -1,5 +1,5 @@
 angular.module('planningpoker').factory('firebase', function($firebaseObject, $firebaseArray) {
-  var appRef = new Firebase('https://planningpokerapp.firebaseio.com');
+  var appRef = new Firebase('https://planningpokerappdev.firebaseio.com');
 
   var firebaseRef = function(ref) {
     return {
