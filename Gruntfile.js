@@ -15,10 +15,7 @@ module.exports = function (grunt) {
     cfg: {
       app: 'app',
       dist: 'dist',
-      firebaseUrls: {
-        develop: 'https://planningpokerappdev.firebaseio.com/',
-        master: 'https://planningpokerapp.firebaseio.com/'
-      }
+      firebaseUrl: process.env.TRAVIS_BRANCH == 'master' ? 'https://planningpokerapp.firebaseio.com/' : 'https://planningpokerappdev.firebaseio.com/'
     },
 
     watch: {
@@ -252,7 +249,7 @@ module.exports = function (grunt) {
         replacements: [{
           // Use the correct firebase url depending on git branch
           from: 'https://planningpokerapp.firebaseio.com',
-          to: '<%= cfg.firebaseUrls[gitinfo.local.branch.current.name] %>'
+          to: '<%= cfg.firebaseUrl %>'
         }, {
           from: '{SHA}',
           to: '<%= gitinfo.local.branch.current.SHA %>'
