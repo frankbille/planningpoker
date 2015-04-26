@@ -14,7 +14,11 @@ module.exports = function (grunt) {
   grunt.initConfig({
     cfg: {
       app: 'app',
-      dist: 'dist'
+      dist: 'dist',
+      firebaseUrls: {
+        develop: 'https://planningpokerappdev.firebaseio.com/',
+        master: 'https://planningpokerapp.firebaseio.com/'
+      }
     },
 
     watch: {
@@ -74,7 +78,13 @@ module.exports = function (grunt) {
           livereload: false,
           base: [
             '<%= cfg.dist %>'
-          ]
+          ],
+          middleware: function(connect) {
+            return [
+              modRewrite (['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg$ /index.html [L]']),
+              mountFolder(connect, 'app')
+            ];
+          }
         }
       }
     },
@@ -149,8 +159,15 @@ module.exports = function (grunt) {
     usemin: {
       html: ['<%= cfg.dist %>/{,*/}*.html'],
       css: ['<%= cfg.dist %>/styles/{,*/}*.css'],
+      js: '<%= cfg.dist %>/scripts/*.js',
       options: {
-        assetsDirs: ['<%= cfg.dist %>']
+        assetsDirs: ['<%= cfg.dist %>'],
+        patterns: {
+          // FIXME While usemin won't have full support for revved files we have to put all references manually here
+          js: [
+            [/(images\/.*?\.(?:gif|jpeg|jpg|png|webp|svg))/gm, 'Update the JS to reference our revved images']
+          ]
+        }
       }
     },
 
@@ -164,6 +181,7 @@ module.exports = function (grunt) {
           dest: '<%= cfg.dist %>',
           src: [
             '*.{ico,png,txt}',
+            'images/*.svg',
             '*.html',
             'bower_components/**/*',
             'fonts/*'
@@ -224,6 +242,23 @@ module.exports = function (grunt) {
         src: 'views/{,*/}*.html',
         dest: '.tmp/templates.js'
       }
+    },
+
+    replace: {
+      dist: {
+        src: ['<%= cfg.dist %>/scripts/*.scripts.js'],
+        overwrite: true,
+        replacements: [{
+          from: 'https://planningpokerapp.firebaseio.com',
+          //to: function() {
+          //  var str = '<%= cfg.dist %>';
+          //  grunt.log.writeln(str);
+          //  //return cfg.firebaseUrls[gitinfo.local.branch.current.name];
+          //  return 'https://planningpokerapp.firebaseio.com';
+          //}
+          to: '<%= cfg.firebaseUrls[gitinfo.local.branch.current.name] %>'
+        }]
+      }
     }
   });
 
@@ -239,6 +274,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('build', [
+    'gitinfo',
     'wiredep',
     'useminPrepare',
     'copy:styles',
@@ -252,6 +288,12 @@ module.exports = function (grunt) {
     'uglify',
     'rev',
     'usemin'
+  ]);
+
+  grunt.registerTask('travis-build', [
+    'clean',
+    'build',
+    'replace:dist'
   ]);
 
   grunt.registerTask('default', [

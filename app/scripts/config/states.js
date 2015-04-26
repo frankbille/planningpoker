@@ -4,12 +4,12 @@ angular.module('planningpoker').config(function($stateProvider, $urlRouterProvid
   $stateProvider
     .state('creategame', {
       url: '/',
-      templateUrl: 'views/creategame/creategame.html',
+      templateUrl: '/views/creategame/creategame.html',
       controller: 'CreateGameCtrl'
     })
     .state('game', {
       url: '/:gameId?managerId',
-      templateUrl: 'views/game/game.html',
+      templateUrl: '/views/game/game.html',
       controller: 'GameCtrl'
     });
 });

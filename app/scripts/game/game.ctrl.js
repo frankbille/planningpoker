@@ -44,7 +44,7 @@ angular.module('planningpoker').controller('GameCtrl', function ($scope, $cookie
 function addShareLinks($scope, $mdDialog, $stateParams) {
   $scope.showShareLinks = function () {
     $mdDialog.show({
-      templateUrl: 'views/game/sharelinksdialog.html',
+      templateUrl: '/views/game/sharelinksdialog.html',
       controller: 'ShareLinksCtrl',
       clickOutsideToClose: true,
       resolve: {
@@ -59,7 +59,7 @@ function addShareLinks($scope, $mdDialog, $stateParams) {
 function addSettingsLink($scope, $mdDialog) {
   $scope.showGameSettings = function () {
     $mdDialog.show({
-      templateUrl: 'views/game/settingsdialog.html',
+      templateUrl: '/views/game/settingsdialog.html',
       controller: 'SettingsDialogCtrl',
       clickOutsideToClose: true,
       focusOnOpen: false,
@@ -100,7 +100,7 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $md
       dialogScope.email = participant.email;
 
       $mdDialog.show({
-        templateUrl: 'views/game/editparticipant.html',
+        templateUrl: '/views/game/editparticipant.html',
         controller: 'EditParticipantCtrl',
         clickOutsideToClose: true,
         focusOnOpen: false,
@@ -115,7 +115,7 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $md
   var participantsRef = gameRef.child('participants');
   $scope.showParticipantActions = function (participant) {
     $mdBottomSheet.show({
-      templateUrl: 'views/game/moreparticipantactions.html',
+      templateUrl: '/views/game/moreparticipantactions.html',
       controller: 'MoreParticipantActionCtrl',
       resolve: {
         participant: function () {
@@ -169,7 +169,7 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $md
     });
   } else {
     $mdDialog.show({
-      templateUrl: 'views/game/editparticipant.html',
+      templateUrl: '/views/game/editparticipant.html',
       controller: 'EditParticipantCtrl',
       focusOnOpen: false,
       escapeToClose: false
@@ -190,7 +190,7 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $md
 function addStories($scope, $mdDialog, gameRef) {
   $scope.addStories = function() {
     $mdDialog.show({
-      templateUrl: 'views/game/addstories.html',
+      templateUrl: '/views/game/addstories.html',
       controller: 'AddStoriesCtrl',
       focusOnOpen: false,
       resolve: {
