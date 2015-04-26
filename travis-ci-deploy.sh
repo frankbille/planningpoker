@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 branch=$(git symbolic-ref --short -q HEAD)
 echo "${GAE_CLIENT_KEY_JSON_FILE}" > gcloudkey.json
 google-cloud-sdk/bin/gcloud auth activate-service-account \
