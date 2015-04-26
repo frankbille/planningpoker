@@ -1,7 +1,9 @@
 language: node_js
 node_js:
   - "0.10"
-before_install: npm install -g grunt-cli
+before_install:
+  - npm install -g grunt-cli
+  - npm install -g bower
 install:
   - npm install
   - if [[ ! -f google-cloud-sdk/path.bash.inc ]]; then
@@ -11,6 +13,8 @@ install:
       google-cloud-sdk/install.sh --usage-reporting false --path-update false --rc-path=~/.bashrc --bash-completion false --override-components=app;
     fi;
   - google-cloud-sdk/bin/gcloud components update preview app --quiet
-before_script: grunt travis-build
+before_script:
+  - bower install
+  - grunt travis-build
 after_success:
 - ./travis-ci-deploy.sh
