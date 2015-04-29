@@ -30,6 +30,10 @@ angular.module('planningpoker').factory('StoryService', function ($q) {
         });
       },
 
+      getStoryRef: function(storyKey) {
+        return storiesRef.child(storyKey);
+      },
+
       nextStory: function () {
         var deferred = $q.defer();
 
@@ -51,28 +55,6 @@ angular.module('planningpoker').factory('StoryService', function ($q) {
         });
 
         return deferred.promise;
-      },
-
-      onCurrentStoryChange: function (callback) {
-        var currentStory = null;
-
-        storiesArray.$loaded().then(function () {
-          angular.forEach(storiesArray, function (story) {
-            if (story.state === 'started') {
-              currentStory = storiesRef.child(story.$id).toFirebaseObject();
-              callback(currentStory);
-            }
-          });
-
-          storiesArray.$watch(function (event) {
-            if (event.event === 'child_changed' && (currentStory === null || event.key != currentStory.$id)) {
-              var story = storiesArray.$getRecord(event.key);
-              if (story.state === 'started') {
-                callback(storiesRef.child(story.$id).toFirebaseObject());
-              }
-            }
-          });
-        });
       },
 
       getSelectedCard: function (currentStory, participant) {

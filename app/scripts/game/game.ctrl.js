@@ -51,7 +51,7 @@ function addGameHandling($scope, gameService) {
   };
 
   $scope.nextStory = function() {
-    gameService.getStoryService().nextStory();
+    gameService.nextStory();
   };
 
   $scope.chooseCard = function(card) {

@@ -24,8 +24,24 @@ angular.module('planningpoker').factory('GameService', function ($q, Participant
         return participantsService;
       },
 
+      nextStory: function() {
+        var deferred = $q.defer();
+
+        storyService.nextStory().then(function(story) {
+          gameRef.child('currentStory').ref().set(story.$id, function(error) {
+            deferred.resolve(story);
+          });
+        });
+
+        return deferred.promise;
+      },
+
       onCurrentStoryChange: function(callback) {
-        storyService.onCurrentStoryChange(callback);
+        gameRef.child('currentStory').ref().on('value', function(snap) {
+          if (angular.isString(snap.val())) {
+            callback(storyService.getStoryRef(snap.val()).toFirebaseObject());
+          }
+        });
       },
 
       start: function () {
@@ -36,7 +52,7 @@ angular.module('planningpoker').factory('GameService', function ($q, Participant
           gameRef.ref().update({
             state: 'started'
           }, function() {
-            gameService.getStoryService().nextStory().then(function (story) {
+            gameService.nextStory().then(function (story) {
               deferred.resolve(story);
             });
           });
