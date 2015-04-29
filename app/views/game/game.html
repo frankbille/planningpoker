@@ -49,7 +49,7 @@
 
             <!-- Story round buttons -->
             <div ng-show="currentStory.state === 'started' && isManager" layout style="padding-top:2rem">
-                <md-button ng-click="forceReveal()" class="md-primary md-raised">
+                <md-button ng-click="forceReveal()" class="md-primary md-raised" ng-disabled="currentStory.revealed">
                     Force reveal
                 </md-button>
                 <md-button ng-click="tryAgain()" class="md-primary md-raised">

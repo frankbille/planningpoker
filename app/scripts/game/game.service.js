@@ -24,6 +24,37 @@ angular.module('planningpoker').factory('GameService', function ($q, Participant
         return participantsService;
       },
 
+      getCurrentStoryKey: function() {
+        var deferred = $q.defer();
+
+        gameRef.child('currentStory').ref().once('value', function(snap) {
+          if (angular.isString(snap.val())) {
+            deferred.resolve(snap.val());
+          } else {
+            deferred.reject('No current session');
+          }
+        });
+
+        return deferred.promise;
+      },
+
+      tryAgain: function() {
+        this.getCurrentStoryKey().then(function(storyKey) {
+          var storyRef = storyService.getStoryRef(storyKey);
+          storyRef.ref().update({
+            participants: null,
+            revealed: false
+          });
+        });
+      },
+
+      forceReveal: function() {
+        this.getCurrentStoryKey().then(function(storyKey) {
+          var storyRef = storyService.getStoryRef(storyKey);
+          storyRef.ref().child('revealed').set(true);
+        });
+      },
+
       nextStory: function() {
         var deferred = $q.defer();
 

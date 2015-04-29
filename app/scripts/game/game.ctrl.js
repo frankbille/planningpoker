@@ -43,11 +43,11 @@ function addGameHandling($scope, gameService) {
   };
 
   $scope.forceReveal = function() {
-    gameService.getStoryService().forceReveal();
+    gameService.forceReveal();
   };
 
   $scope.tryAgain = function() {
-    gameService.getStoryService().tryAgain();
+    gameService.tryAgain();
   };
 
   $scope.nextStory = function() {
