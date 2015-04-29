@@ -52,7 +52,7 @@
                 <md-button ng-click="forceReveal()" class="md-primary md-raised" ng-disabled="currentStory.revealed">
                     Force reveal
                 </md-button>
-                <md-button ng-click="tryAgain()" class="md-primary md-raised">
+                <md-button ng-click="tryAgain()" class="md-primary md-raised" ng-disabled="!currentStory.revealed">
                     Try again
                 </md-button>
                 <md-button ng-click="nextStory()" class="md-accent md-raised">
