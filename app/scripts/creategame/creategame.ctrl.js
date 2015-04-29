@@ -10,7 +10,8 @@ angular.module('planningpoker').controller('CreateGameCtrl', function($scope, fi
 
     var gameRef = gamesRef.ref().push({
       title: angular.isDefined($scope.gameName) ? $scope.gameName : null,
-      createdAt: Firebase.ServerValue.TIMESTAMP
+      createdAt: Firebase.ServerValue.TIMESTAMP,
+      state: 'pending'
     }, function() {
       var managerRef = managersRef.ref().push({
         gameId: gameRef.key()

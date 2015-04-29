@@ -1,8 +1,8 @@
-angular.module('planningpoker').controller('GameCtrl', function ($scope, $cookies, firebase, $stateParams, $state, $mdDialog, $mdBottomSheet) {
+angular.module('planningpoker').controller('GameCtrl', function ($scope, GameService, $cookies, firebase, $stateParams, $state, $mdDialog, $mdBottomSheet) {
   // Start by checking the rights
   if (angular.isDefined($stateParams.managerId)) {
     var managerRef = firebase.child('managers').child($stateParams.managerId);
-    managerRef.ref().once('value', function(manager) {
+    managerRef.ref().once('value', function (manager) {
       if (manager.val() == null || manager.val().gameId !== $stateParams.gameId) {
         $state.go('game', {
           gameId: $stateParams.gameId,
@@ -17,29 +17,51 @@ angular.module('planningpoker').controller('GameCtrl', function ($scope, $cookie
 
   // Load up the game itself
   var gameRef = firebase.child('games').child($stateParams.gameId);
-  var gameObj = gameRef.toFirebaseObject();
-  gameObj.$bindTo($scope, 'game');
+  var gameService = GameService(gameRef);
+  gameService.bindTo($scope, 'game');
 
-  $scope.cards = [
-    0,
-    1,
-    2,
-    3,
-    5,
-    8,
-    13,
-    21,
-    34,
-    55,
-    89,
-    "unknown"
-  ];
-
+  addGameHandling($scope, gameService);
   addShareLinks($scope, $mdDialog, $stateParams);
   addSettingsLink($scope, $mdDialog);
-  addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $mdBottomSheet, $state, firebase);
-  addStories($scope, $mdDialog, gameRef);
+  addParticipants($scope, $cookies, $stateParams, $mdDialog, gameService, $mdBottomSheet, $state, firebase);
+  addStories($scope, $mdDialog, gameService);
 });
+
+function addGameHandling($scope, gameService) {
+  $scope.cards = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, "unknown"];
+
+  gameService.onCurrentStoryChange(function(story) {
+    $scope.currentStory = story;
+  });
+
+  $scope.storyTitleChanged = function() {
+    $scope.currentStory.$save();
+  };
+
+  $scope.startGame = function () {
+    gameService.start();
+  };
+
+  $scope.forceReveal = function() {
+    gameService.getStoryService().forceReveal();
+  };
+
+  $scope.tryAgain = function() {
+    gameService.getStoryService().tryAgain();
+  };
+
+  $scope.nextStory = function() {
+    gameService.getStoryService().nextStory();
+  };
+
+  $scope.chooseCard = function(card) {
+    gameService.getStoryService().setSelectedCard($scope.currentStory, card);
+  };
+
+  $scope.getSelectedCard = function(participant) {
+    return gameService.getStoryService().getSelectedCard($scope.currentStory, participant);
+  };
+}
 
 function addShareLinks($scope, $mdDialog, $stateParams) {
   $scope.showShareLinks = function () {
@@ -72,7 +94,7 @@ function addSettingsLink($scope, $mdDialog) {
   };
 }
 
-function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $mdBottomSheet, $state, firebase) {
+function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameService, $mdBottomSheet, $state, firebase) {
   $scope.connectionText = function (participant) {
     if (angular.isDefined(participant.connections)) {
       return 'Connected';
@@ -90,7 +112,7 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $md
   };
 
   $scope.isParticipantEditable = function (participant) {
-    return participant.key === $cookies[gameRef.key()] || $scope.isManager;
+    return participant.key === $cookies[gameService.key()] || $scope.isManager;
   };
 
   $scope.editParticipant = function (participant) {
@@ -112,90 +134,51 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameRef, $md
     }
   };
 
-  var participantsRef = gameRef.child('participants');
+
   $scope.showParticipantActions = function (participant) {
     $mdBottomSheet.show({
       templateUrl: '/views/game/moreparticipantactions.html',
       controller: 'MoreParticipantActionCtrl',
       resolve: {
+        participantService: function () {
+          return gameService.getParticipantsService();
+        },
         participant: function () {
           return participant;
-        },
-        participantRef: function () {
-          return participantsRef.child(participant.key);
         }
       }
     });
   };
 
   // Presence
-  var handlePresence = function (participantRef) {
-    participantRef.ref().on('value', function (snap) {
-      if (snap.exists() === false) {
-        delete $cookies[gameRef.key()];
-        $state.go('game', {
-          gameId: $stateParams.gameId,
-          managerId: angular.isDefined($stateParams.managerId) ? $stateParams.managerId : null
-        }, {
-          reload: true
-        });
-      }
+  gameService.getParticipantsService().registerPresence(function () {
+    $state.go('game', {
+      gameId: $stateParams.gameId,
+      managerId: angular.isDefined($stateParams.managerId) ? $stateParams.managerId : null
+    }, {
+      reload: true
     });
-
-    var myConnectionsRef = participantRef.child('connections');
-    var connectedRef = firebase.getInfoConnectedRef();
-    connectedRef.ref().on('value', function (snap) {
-      if (snap.val() === true) {
-        var con = myConnectionsRef.ref().push(true);
-        con.onDisconnect().remove();
-      }
-    });
-  };
-
-  if (angular.isDefined($cookies[gameRef.key()])) {
-    var participantRef = participantsRef.child($cookies[gameRef.key()]);
-    handlePresence(participantRef);
-    participantRef.ref().once('value', function (snap) {
-      if (snap.exists()) {
-        handlePresence(participantRef);
-      } else {
-        $state.go('game', {
-          gameId: $stateParams.gameId,
-          managerId: angular.isDefined($stateParams.managerId) ? $stateParams.managerId : null
-        }, {
-          reload: true
-        });
-      }
-    });
-  } else {
+  }, function (participantCallback) {
     $mdDialog.show({
       templateUrl: '/views/game/editparticipant.html',
       controller: 'EditParticipantCtrl',
       focusOnOpen: false,
       escapeToClose: false
     }).then(function (participant) {
-      var participantsDb = participantsRef.toFirebaseArray();
-      participantsDb.$add(participant).then(function (participantRef) {
-        var participantKey = participantRef.key();
-        participantRef.update({
-          key: participantKey
-        });
-        $cookies[gameRef.key()] = participantKey;
-        handlePresence(participantRef);
-      });
+      participantCallback(participant);
     });
-  }
+  });
 }
 
-function addStories($scope, $mdDialog, gameRef) {
-  $scope.addStories = function() {
+function addStories($scope, $mdDialog, gameService) {
+  $scope.addStories = function () {
     $mdDialog.show({
       templateUrl: '/views/game/addstories.html',
       controller: 'AddStoriesCtrl',
       focusOnOpen: false,
       resolve: {
-        gameRef: function() {
-          return gameRef;
+        gameService: function () {
+          return gameService;
         }
       }
     });

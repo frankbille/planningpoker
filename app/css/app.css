@@ -11,10 +11,25 @@
     padding-bottom: 5px;
 }
 
-.card-button {
-    height: 64px;
-    min-width: 64px;
-    font-size: 1.5em;
+.card {
+    height: auto;
+    min-width: inherit;
+    padding: 0;
+    margin-left: 0;
+    border-radius: 5px;
+}
+
+.card md-icon {
+    width: 64px;
+    height: 89px;
+}
+
+.card md-icon .background {
+    fill: #E91E63;
+}
+
+.card md-icon .text {
+    fill: white;
 }
 
 .app-line {
@@ -31,4 +46,12 @@
 .app-line a:hover {
     color: #666;
     text-decoration: underline;
+}
+
+.stories md-icon .background {
+    fill: #E91E63;
+}
+
+.stories md-icon .text {
+    fill: white;
 }

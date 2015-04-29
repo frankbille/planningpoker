@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 225 315">
+    <g
+       id="card1">
+      <rect
+         ry="30"
+         rx="30"
+         y="0"
+         x="0"
+         height="315"
+         width="225"
+         class="background" />
+      <path
+         d="m 137.33595,222.5 -16.52768,0 0,-109.56254 -33.144226,12.17362 0,-14.92823 47.095006,-17.682847 2.5769,0 0,129.999997 z"
+         style="fill:#ffffff"
+         class="text" />
+    </g>
+</svg>

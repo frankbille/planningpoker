@@ -22,11 +22,44 @@
 
     <div layout="row">
         <div flex layout-padding>
-            <md-button ng-repeat="card in cards" class="md-fab" ng-click="chooseCard(card)">
-                <md-icon md-svg-icon="card:card{{card}}" style="color:white"></md-icon>
-            </md-button>
+            <div ng-show="game.state === 'started'" layout-padding>
+                <h1 class="md-display-1" ng-hide="isManager">{{currentStory.title}}</h1>
+                <md-input-container flex md-no-float ng-show="isManager">
+                    <input ng-model="currentStory.title" placeholder="No story title" ng-change="storyTitleChanged()">
+                </md-input-container>
+
+                <div ng-show="currentStory.state === 'started'" layout-padding>
+                    <md-button ng-repeat="participant in game.participants" class="card" ng-disabled="true"><md-icon md-svg-icon="{{getSelectedCard(participant)}}"></md-icon><br>{{participant.name}}</md-button>
+                </div>
+
+                <div ng-show="currentStory.state === 'started' && currentStory.revealed === false" layout-padding>
+                    <md-button ng-repeat="card in cards" class="card" ng-click="chooseCard(card)" aria-label="Choose card {{card}}"><md-icon md-svg-icon="card:card{{card}}" viewBox="0 0 225 315"></md-icon></md-button>
+                </div>
+
+                <div ng-show="currentStory.score != '-'" layout-padding>
+                    <md-button class="card" ng-disabled="true"><md-icon md-svg-icon="card:card{{currentStory.score}}"></md-icon><br>Average</md-button>
+                </div>
+            </div>
         </div>
-        <div flex="25" class="md-primary md-hue-1">
+        <div flex="33" class="md-primary md-hue-1">
+            <!-- Start game button -->
+            <div ng-show="game.state === 'pending' && isManager" layout style="padding-top:2rem">
+                <md-button ng-click="startGame()" class="md-accent md-raised" flex>Start</md-button>
+            </div>
+
+            <!-- Story round buttons -->
+            <div ng-show="currentStory.state === 'started' && isManager" layout style="padding-top:2rem">
+                <md-button ng-click="forceReveal()" class="md-primary md-raised">
+                    Force reveal
+                </md-button>
+                <md-button ng-click="tryAgain()" class="md-primary md-raised">
+                    Try again
+                </md-button>
+                <md-button ng-click="nextStory()" class="md-accent md-raised">
+                    Next story
+                </md-button>
+            </div>
+
             <md-list>
                 <md-subheader>Participants</md-subheader>
                 <md-list-item class="md-2-line" ng-repeat="participant in game.participants" ng-click="editParticipant(participant)" ng-disabled="!isParticipantEditable(participant)">
@@ -35,18 +68,18 @@
                         <h3>{{participant.name}}</h3>
                         <h4 ng-style="connectionStyle(participant)">{{connectionText(participant)}}</h4>
                     </div>
-                    <md-icon md-svg-icon="navigation:more_vert" class="md-secondary" ng-click="showParticipantActions(participant)" ng-show="isManager"></md-icon>
+                    <md-icon md-svg-icon="navigation:more_vert" class="md-secondary" ng-click="showParticipantActions(participant)" ng-show="isManager" aria-label="More actions"></md-icon>
                 </md-list-item>
 
                 <md-subheader>Stories</md-subheader>
-                <md-list-item class="md-2-line" ng-repeat="(storyKey,story) in game.stories" ng-click="editStory(storyKey, story)">
-                    <md-icon md-svg-icon="card:card{{story.score}}"></md-icon>
+                <md-list-item class="md-2-line stories" ng-repeat="(storyKey,story) in game.stories" ng-click="editStory(storyKey, story)">
+                    <md-icon md-svg-icon="card:card{{story.score}}" class="md-avatar"></md-icon>
                     <div class="md-list-item-text">
                         <h3>{{story.title}}</h3>
                         <h4>{{story.state}}</h4>
                     </div>
                 </md-list-item>
-                <md-button class="md-fab md-primary" ng-click="addStories()" ng-show="isManager">
+                <md-button class="md-fab md-primary" ng-click="addStories()" ng-show="isManager" aria-label="Add stories">
                     <md-icon md-svg-icon="content:add"></md-icon>
                 </md-button>
             </md-list>
