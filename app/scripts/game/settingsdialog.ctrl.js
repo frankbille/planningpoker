@@ -1,7 +1,7 @@
-angular.module('planningpoker').controller('SettingsDialogCtrl', function($scope, $mdDialog, game) {
+angular.module('planningpoker').controller('SettingsDialogCtrl', function ($scope, $mdDialog, game) {
   $scope.game = game;
 
-  $scope.close = function() {
+  $scope.close = function () {
     $mdDialog.cancel();
   };
 });

@@ -1,4 +1,4 @@
-angular.module('planningpoker').config(function($mdIconProvider) {
+angular.module('planningpoker').config(function ($mdIconProvider) {
   $mdIconProvider
     .iconSet('action', '/images/action-icons.svg', 24)
     .iconSet('content', '/images/content-icons.svg', 24)

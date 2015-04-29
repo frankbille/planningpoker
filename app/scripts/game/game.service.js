@@ -4,7 +4,7 @@ angular.module('planningpoker').factory('GameService', function ($q, Participant
     var participantsService = ParticipantsService(gameRef.child('participants'), gameRef.key());
     var storyService = StoryService(gameRef.child('stories'), participantsService);
     return {
-      key: function() {
+      key: function () {
         return gameRef.key();
       },
 
@@ -16,18 +16,18 @@ angular.module('planningpoker').factory('GameService', function ($q, Participant
         return this.getState() === 'pending';
       },
 
-      getStoryService: function() {
+      getStoryService: function () {
         return storyService;
       },
 
-      getParticipantsService: function() {
+      getParticipantsService: function () {
         return participantsService;
       },
 
-      getCurrentStoryKey: function() {
+      getCurrentStoryKey: function () {
         var deferred = $q.defer();
 
-        gameRef.child('currentStory').ref().once('value', function(snap) {
+        gameRef.child('currentStory').ref().once('value', function (snap) {
           if (angular.isString(snap.val())) {
             deferred.resolve(snap.val());
           } else {
@@ -38,8 +38,8 @@ angular.module('planningpoker').factory('GameService', function ($q, Participant
         return deferred.promise;
       },
 
-      tryAgain: function() {
-        this.getCurrentStoryKey().then(function(storyKey) {
+      tryAgain: function () {
+        this.getCurrentStoryKey().then(function (storyKey) {
           var storyRef = storyService.getStoryRef(storyKey);
           storyRef.ref().update({
             participants: null,
@@ -48,18 +48,18 @@ angular.module('planningpoker').factory('GameService', function ($q, Participant
         });
       },
 
-      forceReveal: function() {
-        this.getCurrentStoryKey().then(function(storyKey) {
+      forceReveal: function () {
+        this.getCurrentStoryKey().then(function (storyKey) {
           var storyRef = storyService.getStoryRef(storyKey);
           storyRef.ref().child('revealed').set(true);
         });
       },
 
-      nextStory: function() {
+      nextStory: function () {
         var deferred = $q.defer();
 
-        storyService.nextStory().then(function(story) {
-          gameRef.child('currentStory').ref().set(story.$id, function(error) {
+        storyService.nextStory().then(function (story) {
+          gameRef.child('currentStory').ref().set(story.$id, function (error) {
             deferred.resolve(story);
           });
         });
@@ -67,8 +67,8 @@ angular.module('planningpoker').factory('GameService', function ($q, Participant
         return deferred.promise;
       },
 
-      onCurrentStoryChange: function(callback) {
-        gameRef.child('currentStory').ref().on('value', function(snap) {
+      onCurrentStoryChange: function (callback) {
+        gameRef.child('currentStory').ref().on('value', function (snap) {
           if (angular.isString(snap.val())) {
             callback(storyService.getStoryRef(snap.val()).toFirebaseObject());
           }
@@ -82,7 +82,7 @@ angular.module('planningpoker').factory('GameService', function ($q, Participant
           var gameService = this;
           gameRef.ref().update({
             state: 'started'
-          }, function() {
+          }, function () {
             gameService.nextStory().then(function (story) {
               deferred.resolve(story);
             });
@@ -94,7 +94,7 @@ angular.module('planningpoker').factory('GameService', function ($q, Participant
         return deferred.promise;
       },
 
-      bindTo: function(scope, property) {
+      bindTo: function (scope, property) {
         gameObj.$bindTo(scope, property);
       }
     };

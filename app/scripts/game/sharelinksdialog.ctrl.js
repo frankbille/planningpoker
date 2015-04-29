@@ -1,4 +1,4 @@
-angular.module('planningpoker').controller('ShareLinksCtrl', function($scope, $state, $mdDialog, stateParams) {
+angular.module('planningpoker').controller('ShareLinksCtrl', function ($scope, $state, $mdDialog, stateParams) {
   $scope.gameLink = $state.href('game', {
     gameId: stateParams.gameId
   }, {
@@ -16,7 +16,7 @@ angular.module('planningpoker').controller('ShareLinksCtrl', function($scope, $s
     });
   }
 
-  $scope.close = function() {
+  $scope.close = function () {
     $mdDialog.cancel();
   };
 });

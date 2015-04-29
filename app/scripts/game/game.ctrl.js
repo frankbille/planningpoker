@@ -30,11 +30,11 @@ angular.module('planningpoker').controller('GameCtrl', function ($scope, GameSer
 function addGameHandling($scope, gameService) {
   $scope.cards = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, "unknown"];
 
-  gameService.onCurrentStoryChange(function(story) {
+  gameService.onCurrentStoryChange(function (story) {
     $scope.currentStory = story;
   });
 
-  $scope.storyTitleChanged = function() {
+  $scope.storyTitleChanged = function () {
     $scope.currentStory.$save();
   };
 
@@ -42,23 +42,23 @@ function addGameHandling($scope, gameService) {
     gameService.start();
   };
 
-  $scope.forceReveal = function() {
+  $scope.forceReveal = function () {
     gameService.forceReveal();
   };
 
-  $scope.tryAgain = function() {
+  $scope.tryAgain = function () {
     gameService.tryAgain();
   };
 
-  $scope.nextStory = function() {
+  $scope.nextStory = function () {
     gameService.nextStory();
   };
 
-  $scope.chooseCard = function(card) {
+  $scope.chooseCard = function (card) {
     gameService.getStoryService().setSelectedCard($scope.currentStory, card);
   };
 
-  $scope.getSelectedCard = function(participant) {
+  $scope.getSelectedCard = function (participant) {
     return gameService.getStoryService().getSelectedCard($scope.currentStory, participant);
   };
 }

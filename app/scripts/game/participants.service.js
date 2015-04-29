@@ -1,26 +1,26 @@
-angular.module('planningpoker').factory('ParticipantsService', function($cookies, firebase, $q) {
-  return function(participantsRef, gameKey) {
+angular.module('planningpoker').factory('ParticipantsService', function ($cookies, firebase, $q) {
+  return function (participantsRef, gameKey) {
     var participantsArray = participantsRef.toFirebaseArray();
     return {
-      remove: function(participant) {
+      remove: function (participant) {
         var deferred = $q.defer();
 
         var participantRef = participantsRef.child(participant.key);
-        participantRef.ref().remove(function() {
+        participantRef.ref().remove(function () {
           deferred.resolve();
         });
 
         return deferred.promise;
       },
 
-      registerPresence: function(participantRemovedCallback, noParticipantCallback) {
+      registerPresence: function (participantRemovedCallback, noParticipantCallback) {
         var participantKey = $cookies[gameKey];
         if (angular.isDefined(participantKey)) {
           var participantRef = participantsRef.child(participantKey);
           this._handlePresence(participantRef, participantRemovedCallback);
         } else {
           var participantsService = this;
-          noParticipantCallback(function(participant) {
+          noParticipantCallback(function (participant) {
             participantsArray.$add(participant).then(function (participantRef) {
               var participantKey = participantRef.key();
               participantRef.update({
@@ -33,17 +33,17 @@ angular.module('planningpoker').factory('ParticipantsService', function($cookies
         }
       },
 
-      loadNumberOfParticipants: function() {
+      loadNumberOfParticipants: function () {
         var deferred = $q.defer();
 
-        participantsArray.$loaded().then(function() {
+        participantsArray.$loaded().then(function () {
           deferred.resolve(participantsArray.length);
         });
 
         return deferred.promise;
       },
 
-      getCurrentParticipantKey: function() {
+      getCurrentParticipantKey: function () {
         var participantKey = $cookies[gameKey];
         if (angular.isDefined(participantKey)) {
           return participantKey;
@@ -52,7 +52,7 @@ angular.module('planningpoker').factory('ParticipantsService', function($cookies
         return null;
       },
 
-      _handlePresence: function(participantRef, participantRemovedCallback) {
+      _handlePresence: function (participantRef, participantRemovedCallback) {
         participantRef.ref().on('value', function (snap) {
           if (snap.exists() === false) {
             delete $cookies[gameKey];

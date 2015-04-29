@@ -1,57 +1,57 @@
 .moreMenu .md-grid-item-content {
-    height: 96px;
+  height: 96px;
 }
 
 .moreMenu .md-grid-item-content md-icon {
-    height: 48px;
-    width: 48px;
+  height: 48px;
+  width: 48px;
 }
 
 .moreMenu .md-grid-text {
-    padding-bottom: 5px;
+  padding-bottom: 5px;
 }
 
 .card {
-    height: auto;
-    min-width: inherit;
-    padding: 0;
-    margin-left: 0;
-    border-radius: 5px;
+  height: auto;
+  min-width: inherit;
+  padding: 0;
+  margin-left: 0;
+  border-radius: 5px;
 }
 
 .card md-icon {
-    width: 64px;
-    height: 89px;
+  width: 64px;
+  height: 89px;
 }
 
 .card md-icon .background {
-    fill: #E91E63;
+  fill: #E91E63;
 }
 
 .card md-icon .text {
-    fill: white;
+  fill: white;
 }
 
 .app-line {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #999;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #999;
 }
 
 .app-line a {
-    color: #999;
-    text-decoration: none;
+  color: #999;
+  text-decoration: none;
 }
 
 .app-line a:hover {
-    color: #666;
-    text-decoration: underline;
+  color: #666;
+  text-decoration: underline;
 }
 
 .stories md-icon .background {
-    fill: #E91E63;
+  fill: #E91E63;
 }
 
 .stories md-icon .text {
-    fill: white;
+  fill: white;
 }

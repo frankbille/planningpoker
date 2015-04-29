@@ -30,7 +30,7 @@ angular.module('planningpoker').factory('StoryService', function ($q) {
         });
       },
 
-      getStoryRef: function(storyKey) {
+      getStoryRef: function (storyKey) {
         return storiesRef.child(storyKey);
       },
 
@@ -81,7 +81,7 @@ angular.module('planningpoker').factory('StoryService', function ($q) {
 
               var total = 0;
               var participantsWithNumberValue = 0;
-              angular.forEach(currentStory.participants, function(value) {
+              angular.forEach(currentStory.participants, function (value) {
                 if (angular.isNumber(value)) {
                   total += value;
                   participantsWithNumberValue++;
@@ -92,7 +92,7 @@ angular.module('planningpoker').factory('StoryService', function ($q) {
               if (participantsWithNumberValue === 0) {
                 participantsWithNumberValue = 1;
               }
-              var average = total/participantsWithNumberValue;
+              var average = total / participantsWithNumberValue;
               var storyScore = 0;
               for (var i = 0; i < possibleCards.length; i++) {
                 var possibleCard = possibleCards[i];

@@ -1,29 +1,29 @@
-angular.module('planningpoker').factory('firebase', function($firebaseObject, $firebaseArray) {
+angular.module('planningpoker').factory('firebase', function ($firebaseObject, $firebaseArray) {
   var appRef = new Firebase('https://planningpokerappdev.firebaseio.com');
 
-  var firebaseRef = function(ref) {
+  var firebaseRef = function (ref) {
     return {
-      ref: function() {
+      ref: function () {
         return ref;
       },
 
-      key: function() {
+      key: function () {
         return ref.key();
       },
 
-      child: function(childPath) {
+      child: function (childPath) {
         return firebaseRef(ref.child(childPath));
       },
 
-      toFirebaseObject: function() {
+      toFirebaseObject: function () {
         return $firebaseObject(ref);
       },
 
-      toFirebaseArray: function() {
+      toFirebaseArray: function () {
         return $firebaseArray(ref);
       },
 
-      getInfoConnectedRef: function() {
+      getInfoConnectedRef: function () {
         return firebaseRef(firebaseRef(appRef).child('.info').child('connected').ref());
       }
     };

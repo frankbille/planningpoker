@@ -1,7 +1,7 @@
-angular.module('planningpoker').controller('CreateGameCtrl', function($scope, firebase, $state) {
+angular.module('planningpoker').controller('CreateGameCtrl', function ($scope, firebase, $state) {
   $scope.progressType = 'determinate';
 
-  $scope.create = function() {
+  $scope.create = function () {
     $scope.creating = true;
     $scope.progressType = 'indeterminate';
 
@@ -12,10 +12,10 @@ angular.module('planningpoker').controller('CreateGameCtrl', function($scope, fi
       title: angular.isDefined($scope.gameName) ? $scope.gameName : null,
       createdAt: Firebase.ServerValue.TIMESTAMP,
       state: 'pending'
-    }, function() {
+    }, function () {
       var managerRef = managersRef.ref().push({
         gameId: gameRef.key()
-      }, function() {
+      }, function () {
         $state.go('game', {
           gameId: gameRef.key(),
           managerId: managerRef.key()

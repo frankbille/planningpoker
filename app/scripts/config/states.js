@@ -1,4 +1,4 @@
-angular.module('planningpoker').config(function($stateProvider, $urlRouterProvider) {
+angular.module('planningpoker').config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/');
 
   $stateProvider

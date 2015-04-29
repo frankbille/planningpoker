@@ -1,23 +1,23 @@
 <md-dialog>
-    <form name="storiesForm" ng-submit="saveStories()">
-        <md-content>
-            <md-input-container style="width:400px">
-                <label>Stories (add one per line)</label>
-                <textarea ng-model="stories" name="stories" required default-focus></textarea>
+  <form name="storiesForm" ng-submit="saveStories()">
+    <md-content>
+      <md-input-container style="width:400px">
+        <label>Stories (add one per line)</label>
+        <textarea ng-model="stories" name="stories" required default-focus></textarea>
 
-                <div ng-messages="storiesForm.stories.$error">
-                    <div ng-message="required">This is required.</div>
-                </div>
-            </md-input-container>
-        </md-content>
-        <div class="md-actions" layout="row">
-            <span flex></span>
-            <md-button ng-click="cancel()" type="button">
-                Cancel
-            </md-button>
-            <md-button class="md-primary">
-                Create
-            </md-button>
+        <div ng-messages="storiesForm.stories.$error">
+          <div ng-message="required">This is required.</div>
         </div>
-    </form>
+      </md-input-container>
+    </md-content>
+    <div class="md-actions" layout="row">
+      <span flex></span>
+      <md-button ng-click="cancel()" type="button">
+        Cancel
+      </md-button>
+      <md-button class="md-primary">
+        Create
+      </md-button>
+    </div>
+  </form>
 </md-dialog>
