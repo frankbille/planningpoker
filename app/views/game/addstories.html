@@ -15,8 +15,8 @@
   -->
 
 <md-dialog>
-  <form name="storiesForm" ng-submit="saveStories()">
-    <md-content>
+  <md-dialog-content>
+    <form name="storiesForm" ng-submit="saveStories()">
       <md-input-container style="width:400px">
         <label>Stories (add one per line)</label>
         <textarea ng-model="stories" name="stories" required default-focus></textarea>
@@ -25,15 +25,15 @@
           <div ng-message="required">This is required.</div>
         </div>
       </md-input-container>
-    </md-content>
-    <div class="md-actions" layout="row">
-      <span flex></span>
-      <md-button ng-click="cancel()" type="button">
-        Cancel
-      </md-button>
-      <md-button class="md-primary">
-        Create
-      </md-button>
-    </div>
-  </form>
+    </form>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+    <span flex></span>
+    <md-button ng-click="cancel()" type="button">
+      Cancel
+    </md-button>
+    <md-button class="md-primary" ng-click="saveStories()">
+      Create
+    </md-button>
+  </div>
 </md-dialog>

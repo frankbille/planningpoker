@@ -65,6 +65,61 @@
           </md-button>
         </div>
       </div>
+
+      <div ng-show="game.state === 'pending'" layout-padding>
+        <p>
+          Welcome to Planning Poker. While you wait for the game to start, you may
+          look around a bit to familiarize yourself.
+        </p>
+
+        <p>
+          You can always change your initials and avatar, by clicking your name
+          in the right menu. If you want to share the link to this game,
+          you can click the
+          <md-icon md-svg-icon="social:share"></md-icon>
+          share icon
+          in the top menu.
+        </p>
+        <p ng-hide="isManager">
+          Every game has one or more managers, who can add stories, start the game
+          and make sure it progresses. Wait for a manager to start the game.
+        </p>
+
+        <p ng-show="isManager">
+          As a <strong>game manager</strong>, you have extra control over the game.
+          First of all, you can edit the game title, by clicking the
+          <md-icon md-svg-icon="action:settings"></md-icon>
+          settings icon in the top menu.
+        </p>
+        <p ng-show="isManager">
+          You may edit any participants initials and avatar, as well as removing them
+          from the game. You do that by clicking the
+          <md-icon md-svg-icon="navigation:more_vert"></md-icon>
+          more button next to the participant and choose remove
+        </p>
+        <p ng-show="isManager">
+          You can pre-add stories so everyone can see what the scope of the game is.
+          Please note, that it is not required to do that, as the stories will be
+          created as the game is played if they don't exist before.
+          <br>
+          Stories are added by pressing the
+          <md-icon md-svg-icon="content:add"></md-icon>
+          plus icon under the stories section in the right menu.
+        </p>
+        <p>
+          At the top of the right menu, you will have some manager button.
+          <br>
+          To begin with there will be the <strong>Start</strong> button, which will
+          start the game.
+          <br>
+          When the game is started you will have game round buttons, controlling the
+          current round being played.
+        </p>
+
+        <p>
+          <strong>Happy planning!</strong>
+        </p>
+      </div>
     </div>
     <div flex="33" class="md-primary md-hue-1">
       <md-list>
