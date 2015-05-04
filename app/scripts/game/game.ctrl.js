@@ -187,6 +187,27 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameService,
 }
 
 function addStories($scope, $mdDialog, gameService) {
+  $scope.editStory = function (storyKey, story) {
+    if ($scope.isManager) {
+      $mdDialog.show({
+        templateUrl: '/views/game/editstory.html',
+        controller: 'EditStoryCtrl',
+        focusOnOpen: false,
+        resolve: {
+          story: function () {
+            return story;
+          },
+          storyKey: function () {
+            return storyKey;
+          },
+          storyService: function () {
+            return gameService.getStoryService();
+          }
+        }
+      });
+    }
+  };
+
   $scope.addStories = function () {
     $mdDialog.show({
       templateUrl: '/views/game/addstories.html',

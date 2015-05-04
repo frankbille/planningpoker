@@ -46,6 +46,10 @@ angular.module('planningpoker').factory('StoryService', function ($q) {
         });
       },
 
+      updateStoryTitle: function (storyKey, title) {
+        storiesRef.child(storyKey).child('title').ref().set(title);
+      },
+
       getStoryRef: function (storyKey) {
         return storiesRef.child(storyKey);
       },
