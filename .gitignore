@@ -1,6 +1,7 @@
 app/bower_components
 node_modules
 dist
+coverage
 .tmp
 *.iml
 .idea

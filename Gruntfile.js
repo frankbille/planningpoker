@@ -92,6 +92,7 @@ module.exports = function (grunt) {
           dot: true,
           src: [
             '.tmp',
+            'coverage',
             '<%= cfg.dist %>/*',
             '!<%= cfg.dist %>/.git*'
           ]
@@ -258,6 +259,23 @@ module.exports = function (grunt) {
           to: '<%= gitinfo.local.branch.current.shortSHA %>'
         }]
       }
+    },
+
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js',
+        singleRun: true
+      }
+    },
+
+    coveralls: {
+      options: {
+        debug: false,
+        coverageDir: 'coverage',
+        dryRun: false,
+        force: false,
+        recursive: true
+      }
     }
   });
 
@@ -289,10 +307,17 @@ module.exports = function (grunt) {
     'usemin'
   ]);
 
+  grunt.registerTask('test', [
+    'clean',
+    'karma:unit'
+  ]);
+
   grunt.registerTask('travis-build', [
     'clean',
     'build',
-    'replace:dist'
+    'replace:dist',
+    'karma:unit',
+    'coveralls'
   ]);
 
   grunt.registerTask('default', [
