@@ -102,6 +102,9 @@ module.exports = function (grunt) {
             'coverage',
             '<%= cfg.dist %>',
             '<%= cfg.app %>/compiled',
+            '<%= cfg.app %>/scripts/**/*.js',
+            '<%= cfg.app %>/scripts/**/*.map',
+            '<%= cfg.app %>/scripts/**/*.ktp.ts',
             '!<%= cfg.dist %>/.git*'
           ]
         }]
@@ -326,7 +329,6 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('test', [
-    'clean',
     'karma:unit'
   ]);
 

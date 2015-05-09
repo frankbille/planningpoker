@@ -23,8 +23,8 @@ module.exports = function (config) {
       'app/bower_components/angular-ui-router/release/angular-ui-router.js',
       'app/bower_components/angularfire/dist/angularfire.js',
       'app/bower_components/firebase/firebase.js',
-      'app/scripts/**/*.js',
-      'test/**/*_spec.js'
+      'app/scripts/**/*.ts',
+      'test/**/*_spec.ts'
     ],
 
 
@@ -35,7 +35,18 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'app/scripts/**/*.ts': ['typescript'],
+      'test/scripts/**/*.ts': ['typescript'],
       'app/scripts/**/*.js': ['coverage']
+    },
+
+    typescriptPreprocessor: {
+      options: {
+        sourceMap: true
+      },
+      typings: [
+        'typings/tsd.d.ts'
+      ]
     },
 
     // optionally, configure the reporter

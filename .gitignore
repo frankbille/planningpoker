@@ -2,6 +2,7 @@ app/bower_components
 app/compiled
 app/scripts/**/*.js
 app/scripts/**/*.map
+app/scripts/**/*.ktp.ts
 app/scripts/.baseDir.ts
 node_modules
 typings
