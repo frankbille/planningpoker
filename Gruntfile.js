@@ -100,9 +100,9 @@ module.exports = function (grunt) {
           src: [
             '.tmp',
             'coverage',
-            '<%= cfg.dist %>/*',
-            '!<%= cfg.dist %>/.git*',
-            '!<%= cfg.app %>/compiled'
+            '<%= cfg.dist %>',
+            '<%= cfg.app %>/compiled',
+            '!<%= cfg.dist %>/.git*'
           ]
         }]
       }
