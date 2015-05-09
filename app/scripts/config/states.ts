@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 /// <reference path="../../../typings/angularjs/angular.d.ts" />
-/// <reference path="../../../typings/angular-material/angular-material.d.ts" />
-angular.module('planningpoker').controller('SettingsDialogCtrl', function ($scope, $mdDialog, game) {
-    $scope.game = game;
-    $scope.close = function () {
-        $mdDialog.cancel();
-    };
+/// <reference path="../../../typings/angular-ui-router/angular-ui-router.d.ts" />
+
+angular.module('planningpoker').config(function ($stateProvider:angular.ui.IStateProvider, $urlRouterProvider:angular.ui.IUrlRouterProvider) {
+  $urlRouterProvider.otherwise('/');
+
+  $stateProvider
+    .state('creategame', {
+      url: '/',
+      templateUrl: '/views/creategame/creategame.html',
+      controller: 'CreateGameCtrl'
+    })
+    .state('game', {
+      url: '/:gameId?managerId',
+      templateUrl: '/views/game/game.html',
+      controller: 'GameCtrl'
+    });
 });
-//# sourceMappingURL=settingsdialog.ctrl.js.map

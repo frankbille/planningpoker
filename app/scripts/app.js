@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/// <reference path="../../typings/angularjs/angular.d.ts" />
 angular.module('planningpoker', [
-  'ngCookies',
-  'ngMaterial',
-  'ngMessages',
-  'firebase',
-  'ui.router',
-  'ui.gravatar'
+    'ngCookies',
+    'ngMaterial',
+    'ngMessages',
+    'firebase',
+    'ui.router',
+    'ui.gravatar'
 ]).config(function ($locationProvider) {
-  $locationProvider.html5Mode(true);
+    $locationProvider.html5Mode(true);
 });
+//# sourceMappingURL=app.js.map

@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/// <reference path="../../../typings/angularjs/angular.d.ts" />
 angular.module('planningpoker').directive('defaultFocus', function ($timeout) {
-  return {
-    link: function (scope, element) {
-      $timeout(function () {
-        element[0].focus();
-      });
-    }
-  };
+    return {
+        link: function (scope, element) {
+            $timeout(function () {
+                element[0].focus();
+            });
+        }
+    };
 });
+//# sourceMappingURL=defaultfocus.directive.js.map

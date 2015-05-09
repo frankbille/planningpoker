@@ -13,31 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../typings/angular-ui-router/angular-ui-router.d.ts" />
 angular.module('planningpoker').controller('CreateGameCtrl', function ($scope, firebase, $state) {
-  $scope.progressType = 'determinate';
-
-  $scope.create = function () {
-    $scope.creating = true;
-    $scope.progressType = 'indeterminate';
-
-    var gamesRef = firebase.child('games');
-    var managersRef = firebase.child('managers');
-
-    var gameRef = gamesRef.ref().push({
-      title: angular.isDefined($scope.gameName) ? $scope.gameName : null,
-      createdAt: Firebase.ServerValue.TIMESTAMP,
-      state: 'pending'
-    }, function () {
-      var managerRef = managersRef.ref().push({
-        gameId: gameRef.key()
-      }, function () {
-        $state.go('game', {
-          gameId: gameRef.key(),
-          managerId: managerRef.key()
-        })
-      });
-    });
-  };
-
+    $scope.progressType = 'determinate';
+    $scope.create = function () {
+        $scope.creating = true;
+        $scope.progressType = 'indeterminate';
+        var gamesRef = firebase.child('games');
+        var managersRef = firebase.child('managers');
+        var gameRef = gamesRef.ref().push({
+            title: angular.isDefined($scope.gameName) ? $scope.gameName : null,
+            createdAt: Firebase.ServerValue.TIMESTAMP,
+            state: 'pending'
+        }, function () {
+            var managerRef = managersRef.ref().push({
+                gameId: gameRef.key()
+            }, function () {
+                $state.go('game', {
+                    gameId: gameRef.key(),
+                    managerId: managerRef.key()
+                });
+            });
+        });
+    };
 });
+//# sourceMappingURL=creategame.ctrl.js.map

@@ -13,26 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../typings/angular-material/angular-material.d.ts" />
+/// <reference path="../../../typings/angular-ui-router/angular-ui-router.d.ts" />
+/// <reference path="game.ctrl.ts" />
 angular.module('planningpoker').controller('ShareLinksCtrl', function ($scope, $state, $mdDialog, stateParams) {
-  $scope.gameLink = $state.href('game', {
-    gameId: stateParams.gameId
-  }, {
-    absolute: true,
-    inherit: false
-  });
-
-  if (angular.isDefined(stateParams.managerId)) {
-    $scope.managerLink = $state.href('game', {
-      gameId: stateParams.gameId,
-      managerId: stateParams.managerId
+    $scope.gameLink = $state.href('game', {
+        gameId: stateParams.gameId
     }, {
-      absolute: true,
-      inherit: false
+        absolute: true,
+        inherit: false
     });
-  }
-
-  $scope.close = function () {
-    $mdDialog.cancel();
-  };
+    if (angular.isDefined(stateParams.managerId)) {
+        $scope.managerLink = $state.href('game', {
+            gameId: stateParams.gameId,
+            managerId: stateParams.managerId
+        }, {
+            absolute: true,
+            inherit: false
+        });
+    }
+    $scope.close = function () {
+        $mdDialog.cancel();
+    };
 });
+//# sourceMappingURL=sharelinksdialog.ctrl.js.map

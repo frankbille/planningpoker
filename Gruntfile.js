@@ -19,13 +19,20 @@ module.exports = function (grunt) {
     },
 
     watch: {
-      js: {
-        files: ['<%= cfg.app %>/scripts/{,*/}*.js'],
-        tasks: ['newer:jshint:all'],
+      ts: {
+        files: ['<%= cfg.app %>/scripts/{,*/}*.ts'],
+        tasks: ['ts:build'],
         options: {
           livereload: true
         }
       },
+      //js: {
+      //  files: ['<%= cfg.app %>/compiled/{,*/}*.js'],
+      //  tasks: ['newer:jshint:all'],
+      //  options: {
+      //    livereload: true
+      //  }
+      //},
       styles: {
         files: ['<%= cfg.app %>/css/{,*/}*.css'],
         tasks: ['newer:copy:styles']
@@ -60,9 +67,9 @@ module.exports = function (grunt) {
             '.tmp',
             '<%= cfg.app %>'
           ],
-          middleware: function(connect) {
+          middleware: function (connect) {
             return [
-              modRewrite (['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg$ /index.html [L]']),
+              modRewrite(['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg$ /index.html [L]']),
               mountFolder(connect, 'app')
             ];
           }
@@ -76,9 +83,9 @@ module.exports = function (grunt) {
           base: [
             '<%= cfg.dist %>'
           ],
-          middleware: function(connect) {
+          middleware: function (connect) {
             return [
-              modRewrite (['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg$ /index.html [L]']),
+              modRewrite(['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg$ /index.html [L]']),
               mountFolder(connect, 'app')
             ];
           }
@@ -94,7 +101,8 @@ module.exports = function (grunt) {
             '.tmp',
             'coverage',
             '<%= cfg.dist %>/*',
-            '!<%= cfg.dist %>/.git*'
+            '!<%= cfg.dist %>/.git*',
+            '!<%= cfg.app %>/compiled'
           ]
         }]
       }
@@ -113,6 +121,15 @@ module.exports = function (grunt) {
         //    }
         //  }
         //}
+      }
+    },
+
+    ts: {
+      build: {
+        src: [
+          '<%= cfg.app %>/scripts/**/*.ts'
+        ],
+        outDir: '<%= cfg.app %>/compiled'
       }
     },
 
@@ -293,6 +310,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'gitinfo',
     'wiredep',
+    'ts:build',
     'useminPrepare',
     'copy:styles',
     'autoprefixer',

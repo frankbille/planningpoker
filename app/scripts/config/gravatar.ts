@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 /// <reference path="../../../typings/angularjs/angular.d.ts" />
-/// <reference path="../../../typings/angular-material/angular-material.d.ts" />
-angular.module('planningpoker').controller('SettingsDialogCtrl', function ($scope, $mdDialog, game) {
-    $scope.game = game;
-    $scope.close = function () {
-        $mdDialog.cancel();
-    };
+
+angular.module('planningpoker').config(function (gravatarServiceProvider) {
+  gravatarServiceProvider.defaults = {
+    "default": 'monsterid'
+  }
 });
-//# sourceMappingURL=settingsdialog.ctrl.js.map

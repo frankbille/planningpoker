@@ -15,10 +15,14 @@
  */
 /// <reference path="../../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../../typings/angular-material/angular-material.d.ts" />
-angular.module('planningpoker').controller('SettingsDialogCtrl', function ($scope, $mdDialog, game) {
-    $scope.game = game;
-    $scope.close = function () {
-        $mdDialog.cancel();
-    };
+
+angular.module('planningpoker').controller('EditParticipantCtrl', function ($scope, $mdDialog:angular.material.MDDialogService) {
+  $scope.saveParticipant = function () {
+    if ($scope.nameForm.$valid) {
+      $mdDialog.hide({
+        name: $scope.name,
+        email: angular.isDefined($scope.email) ? $scope.email : null
+      });
+    }
+  };
 });
-//# sourceMappingURL=settingsdialog.ctrl.js.map

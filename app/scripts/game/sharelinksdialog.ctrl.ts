@@ -15,10 +15,28 @@
  */
 /// <reference path="../../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../../typings/angular-material/angular-material.d.ts" />
-angular.module('planningpoker').controller('SettingsDialogCtrl', function ($scope, $mdDialog, game) {
-    $scope.game = game;
-    $scope.close = function () {
-        $mdDialog.cancel();
-    };
+/// <reference path="../../../typings/angular-ui-router/angular-ui-router.d.ts" />
+/// <reference path="game.ctrl.ts" />
+
+angular.module('planningpoker').controller('ShareLinksCtrl', function ($scope, $state:angular.ui.IStateService, $mdDialog:angular.material.MDDialogService, stateParams:GameStateParamsService) {
+  $scope.gameLink = $state.href('game', {
+    gameId: stateParams.gameId
+  }, {
+    absolute: true,
+    inherit: false
+  });
+
+  if (angular.isDefined(stateParams.managerId)) {
+    $scope.managerLink = $state.href('game', {
+      gameId: stateParams.gameId,
+      managerId: stateParams.managerId
+    }, {
+      absolute: true,
+      inherit: false
+    });
+  }
+
+  $scope.close = function () {
+    $mdDialog.cancel();
+  };
 });
-//# sourceMappingURL=settingsdialog.ctrl.js.map

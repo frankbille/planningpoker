@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// <reference path="../../../typings/angularjs/angular.d.ts" />
-/// <reference path="../../../typings/angular-material/angular-material.d.ts" />
-angular.module('planningpoker').controller('SettingsDialogCtrl', function ($scope, $mdDialog, game) {
-    $scope.game = game;
-    $scope.close = function () {
-        $mdDialog.cancel();
-    };
+/// <reference path="../../typings/angularjs/angular.d.ts" />
+
+angular.module('planningpoker', [
+  'ngCookies',
+  'ngMaterial',
+  'ngMessages',
+  'firebase',
+  'ui.router',
+  'ui.gravatar'
+]).config(function ($locationProvider:ng.ILocationProvider) {
+  $locationProvider.html5Mode(true);
 });
-//# sourceMappingURL=settingsdialog.ctrl.js.map
