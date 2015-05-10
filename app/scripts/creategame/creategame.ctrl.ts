@@ -15,31 +15,61 @@
  */
 /// <reference path="../../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../../typings/angular-ui-router/angular-ui-router.d.ts" />
+/// <reference path="../../../typings/firebase/firebase.d.ts" />
 
-angular.module('planningpoker').controller('CreateGameCtrl', function ($scope, firebase, $state:angular.ui.IStateService) {
-  $scope.progressType = 'determinate';
+module planningpoker.creategame {
+  'use strict';
 
-  $scope.create = function () {
-    $scope.creating = true;
-    $scope.progressType = 'indeterminate';
+  export interface CreateGameScope {
+    creating: boolean;
+    progressType: string;
+    gameName: string;
+    create(): void;
+  }
 
-    var gamesRef = firebase.child('games');
-    var managersRef = firebase.child('managers');
+  export class CreateGameController implements CreateGameScope {
+    creating:boolean;
+    progressType:string;
+    gameName:string;
 
-    var gameRef = gamesRef.ref().push({
-      title: angular.isDefined($scope.gameName) ? $scope.gameName : null,
-      createdAt: Firebase.ServerValue.TIMESTAMP,
-      state: 'pending'
-    }, function () {
-      var managerRef = managersRef.ref().push({
-        gameId: gameRef.key()
+    private $state:angular.ui.IStateService;
+    private firebase;
+
+    constructor(firebase, $state:angular.ui.IStateService) {
+      var vm = this;
+
+      this.firebase = firebase;
+      this.$state = $state;
+
+      vm.progressType = 'determinate';
+      vm.creating = false;
+    }
+
+    create():void {
+      var vm = this;
+      vm.creating = true;
+      vm.progressType = 'indeterminate';
+
+      var gamesRef = this.firebase.child('games');
+      var managersRef = this.firebase.child('managers');
+
+      var gameRef = gamesRef.ref().push({
+        title: angular.isDefined(vm.gameName) ? vm.gameName : null,
+        createdAt: Firebase.ServerValue.TIMESTAMP,
+        state: 'pending'
       }, function () {
-        $state.go('game', {
-          gameId: gameRef.key(),
-          managerId: managerRef.key()
-        })
+        var managerRef = managersRef.ref().push({
+          gameId: gameRef.key()
+        }, function () {
+          vm.$state.go('game', {
+            gameId: gameRef.key(),
+            managerId: managerRef.key()
+          })
+        });
       });
-    });
-  };
+    }
+  }
 
-});
+  angular.module('planningpoker').controller('CreateGameCtrl', CreateGameController);
+}
+

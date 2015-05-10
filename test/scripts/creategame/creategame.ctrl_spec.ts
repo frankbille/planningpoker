@@ -1,26 +1,28 @@
 /// <reference path="../../../app/scripts/creategame/creategame.ctrl.ts" />
 /// <reference path="../../../typings/jasmine/jasmine.d.ts" />
 /// <reference path="../../../typings/angularjs/angular-mocks.d.ts" />
+module planningpoker.creategame {
+  describe('CreateGameCtrl', () => {
+    beforeEach(module('planningpoker'));
 
-describe('CreateGameCtrl', () => {
-  beforeEach(module('planningpoker'));
+    var controller;
 
-  var $scope, controller;
+    beforeEach(() => {
+      controller = new CreateGameController(null, null);
+    });
 
-  beforeEach(inject((_$controller_) => {
-    $scope = {};
-    controller = _$controller_('CreateGameCtrl', {$scope: $scope});
-  }));
+    describe('$scope.progressType', () => {
+      it('should have default value', () => {
+        expect(controller.progressType).toBe('determinate');
+      });
+    });
 
-  describe('$scope.progressType', () => {
-    it('should have default value', () => {
-      expect($scope.progressType).toBe('determinate');
+    describe('$scope.create', () => {
+      it('should be a function', () => {
+        expect(typeof(controller.create)).toBe('function');
+      });
     });
   });
 
-  describe('$scope.create', () => {
-    it('should be a function', () => {
-      expect(typeof($scope.create)).toBe('function');
-    });
-  });
-});
+}
+

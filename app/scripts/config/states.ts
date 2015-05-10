@@ -23,7 +23,8 @@ angular.module('planningpoker').config(function ($stateProvider:angular.ui.IStat
     .state('creategame', {
       url: '/',
       templateUrl: '/views/creategame/creategame.html',
-      controller: 'CreateGameCtrl'
+      controller: 'CreateGameCtrl',
+      controllerAs: 'vm'
     })
     .state('game', {
       url: '/:gameId?managerId',

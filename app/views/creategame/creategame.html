@@ -15,13 +15,13 @@
   -->
 
 <md-content layout="row" layout-padding layout-fill layout-align="center center">
-  <form layout="column" ng-submit="create()">
+  <form layout="column" ng-submit="vm.create()">
     <md-input-container style="width:400px">
       <label>Enter game name (optional)</label>
-      <input ng-model="gameName" ng-disabled="creating" default-focus>
+      <input ng-model="vm.gameName" ng-disabled="vm.creating" default-focus>
     </md-input-container>
 
-    <md-button class="md-raised md-primary" ng-disabled="creating">Create game</md-button>
+    <md-button class="md-raised md-primary" ng-disabled="vm.creating">Create game</md-button>
 
     <div class="app-line">
       <a href="http://github.com/frankbille/planningpoker" target="_blank">Planning Poker</a>
@@ -31,6 +31,6 @@
 
     <br><br><br><br><br><br>
 
-    <md-progress-linear md-mode="{{progressType}}" value="0"></md-progress-linear>
+    <md-progress-linear md-mode="{{vm.progressType}}" value="0"></md-progress-linear>
   </form>
 </md-content>
