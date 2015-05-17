@@ -206,11 +206,11 @@ module.exports = function (grunt) {
             'gae.go'
           ]
         }, {
-          expand: true,
-          cwd: '.tmp/images',
-          dest: '<%= cfg.dist %>/images',
-          src: ['generated/*']
-        }]
+            expand: true,
+            cwd: '.tmp/images',
+            dest: '<%= cfg.dist %>/images',
+            src: ['generated/*']
+          }]
       },
       styles: {
         expand: true,
@@ -263,6 +263,30 @@ module.exports = function (grunt) {
       }
     },
 
+    tsconfig: {
+      make: {
+        options: {
+          /* The main feature is to put files in your tsconfig.json file based on this filesGlob... */
+          filesGlob: [
+            '<%= cfg.app %>/scripts/**/*.ts'
+          ],
+
+          /* Anything added to "additionalOptions" will also be put into the tsconfig.json file */
+          additionalOptions: {
+            compilerOptions: {
+              'emitDecoratorMetadata': true,
+              'module': 'commonjs',
+              'target': 'es5',
+              'removeComments': true,
+              'declaration': true,
+              'outDir': 'app/compiled'
+            },
+          }
+
+        }
+      }
+    },
+
     replace: {
       dist: {
         src: ['<%= cfg.dist %>/scripts/*.scripts.js'],
@@ -272,12 +296,12 @@ module.exports = function (grunt) {
           from: 'https://planningpokerappdev.firebaseio.com',
           to: '<%= cfg.firebaseUrl %>'
         }, {
-          from: '{SHA}',
-          to: '<%= gitinfo.local.branch.current.SHA %>'
-        }, {
-          from: '{SHA-SHORT}',
-          to: '<%= gitinfo.local.branch.current.shortSHA %>'
-        }]
+            from: '{SHA}',
+            to: '<%= gitinfo.local.branch.current.SHA %>'
+          }, {
+            from: '{SHA-SHORT}',
+            to: '<%= gitinfo.local.branch.current.shortSHA %>'
+          }]
       }
     },
 

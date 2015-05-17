@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "module": "commonjs",
+    "target": "es5",
+    "removeComments": true,
+    "declaration": true,
+    "outDir": "app/compiled"
+  },
+  "files": [
+    "app/scripts/app.ts",
+    "app/scripts/config/firebase.ts",
+    "app/scripts/config/gravatar.ts",
+    "app/scripts/config/icons.ts",
+    "app/scripts/config/states.ts",
+    "app/scripts/creategame/creategame.ctrl.ts",
+    "app/scripts/directives/defaultfocus.directive.ts",
+    "app/scripts/game/addstories.ctrl.ts",
+    "app/scripts/game/editparticipant.ctrl.ts",
+    "app/scripts/game/editstory.ctrl.ts",
+    "app/scripts/game/game.ctrl.ts",
+    "app/scripts/game/game.service.ts",
+    "app/scripts/game/moreparticipantactions.ctrl.ts",
+    "app/scripts/game/participants.service.ts",
+    "app/scripts/game/settingsdialog.ctrl.ts",
+    "app/scripts/game/sharelinksdialog.ctrl.ts",
+    "app/scripts/game/story.service.ts"
+  ]
+}
