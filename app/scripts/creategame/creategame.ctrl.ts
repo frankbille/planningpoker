@@ -27,7 +27,7 @@ module planningpoker.creategame {
     create(): void;
   }
 
-  export class CreateGameController implements CreateGameScope {
+  class CreateGameController implements CreateGameScope {
     creating:boolean;
     progressType:string;
     gameName:string;
