@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// <reference path="../../../typings/angularjs/angular.d.ts" />
-/// <reference path="../../../typings/angular-material/angular-material.d.ts" />
-/// <reference path="../../../typings/angular-ui-router/angular-ui-router.d.ts" />
+/// <reference path="../../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../../typings/angular-material/angular-material.d.ts" />
+/// <reference path="../../../../typings/angular-ui-router/angular-ui-router.d.ts" />
 /// <reference path="game.ctrl.ts" />
 
 angular.module('planningpoker').controller('ShareLinksCtrl', function ($scope, $state:angular.ui.IStateService, $mdDialog:angular.material.MDDialogService, stateParams:GameStateParamsService) {

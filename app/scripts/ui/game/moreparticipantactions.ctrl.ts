@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// <reference path="../../../typings/angularjs/angular.d.ts" />
-/// <reference path="../../../typings/angular-material/angular-material.d.ts" />
+/// <reference path="../../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../../typings/angular-material/angular-material.d.ts" />
 
 angular.module('planningpoker').controller('MoreParticipantActionCtrl', function ($scope, $mdBottomSheet:angular.material.MDBottomSheetService, $mdDialog:angular.material.MDDialogService, participant, participantService) {
   $scope.remove = function () {

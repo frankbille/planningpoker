@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// <reference path="../../../typings/angularjs/angular.d.ts" />
-/// <reference path="../../../typings/angular-material/angular-material.d.ts" />
+/// <reference path="../../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../../typings/angular-material/angular-material.d.ts" />
 
-angular.module('planningpoker').controller('AddStoriesCtrl', function ($scope, $mdDialog:angular.material.MDDialogService, gameService) {
-  $scope.saveStories = function () {
-    if ($scope.storiesForm.$valid) {
-      gameService.getStoryService().addStories($scope.stories);
-      $mdDialog.hide();
-    }
-  };
+angular.module('planningpoker').controller('SettingsDialogCtrl', function ($scope, $mdDialog:angular.material.MDDialogService, game) {
+  $scope.game = game;
 
-  $scope.cancel = function () {
+  $scope.close = function () {
     $mdDialog.cancel();
   };
 });
