@@ -17,6 +17,7 @@
 /// <reference path="../../../../typings/angularjs/angular-cookies.d.ts" />
 /// <reference path="../../../../typings/angular-material/angular-material.d.ts" />
 /// <reference path="../../../../typings/angular-ui-router/angular-ui-router.d.ts" />
+/// <reference path="../../services/game.service.ts" />
 
 interface GameStateParamsService extends angular.ui.IStateParamsService {
   gameId: string;
@@ -24,7 +25,7 @@ interface GameStateParamsService extends angular.ui.IStateParamsService {
   participantId: string;
 }
 
-angular.module('planningpoker').controller('GameCtrl', function ($scope, GameService, $cookies:angular.cookies.ICookiesService, firebase, $stateParams:GameStateParamsService, $state:angular.ui.IStateService, $mdDialog:angular.material.MDDialogService, $mdBottomSheet:angular.material.MDBottomSheetService) {
+angular.module('planningpoker').controller('GameCtrl', function ($scope, GameServiceFactory:planningpoker.services.IGameServiceFactory, $cookies:angular.cookies.ICookiesService, firebase, $stateParams:GameStateParamsService, $state:angular.ui.IStateService, $mdDialog:angular.material.MDDialogService, $mdBottomSheet:angular.material.MDBottomSheetService) {
   // Start by checking the rights
   if (angular.isDefined($stateParams.managerId)) {
     var managerRef = firebase.child('managers').child($stateParams.managerId);
@@ -42,8 +43,7 @@ angular.module('planningpoker').controller('GameCtrl', function ($scope, GameSer
   }
 
   // Load up the game itself
-  var gameRef = firebase.child('games').child($stateParams.gameId);
-  var gameService = GameService(gameRef);
+  var gameService = GameServiceFactory.load($stateParams.gameId);
   gameService.bindTo($scope, 'game');
 
   addGameHandling($scope, gameService);

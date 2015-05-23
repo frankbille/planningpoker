@@ -14,106 +14,200 @@
  * limitations under the License.
  */
 /// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../typings/firebase/firebase.d.ts" />
+/// <reference path="../../../typings/angularfire/angularfire.d.ts" />
+/// <reference path="../domains/game.ts" />
 
-angular.module('planningpoker').factory('GameService', function ($q:ng.IQService, ParticipantsService, StoryService) {
-  return function (gameRef) {
-    var gameObj = gameRef.toFirebaseObject();
-    var participantsService = ParticipantsService(gameRef.child('participants'), gameRef.key());
-    var storyService = StoryService(gameRef.child('stories'), participantsService);
-    return {
-      key: function () {
-        return gameRef.key();
-      },
+module planningpoker.services {
 
-      getState: function () {
-        return gameObj.state;
-      },
+  export class CreatedGame {
+    gameKey:string;
+    managerKey:string;
 
-      canBeStarted: function () {
-        return this.getState() === 'pending';
-      },
+    constructor(gameKey:string, managerKey:string) {
+      this.gameKey = gameKey;
+      this.managerKey = managerKey;
+    }
+  }
 
-      getStoryService: function () {
-        return storyService;
-      },
+  interface GameAngularFireObjectService extends AngularFireObjectService {
+    (firebase:Firebase): planningpoker.domains.Game;
+  }
 
-      getParticipantsService: function () {
-        return participantsService;
-      },
+  export interface IGameService {
+    key():string;
+    getState():string;
+    canBeStarted():boolean;
+    getStoryService():any;
+    getParticipantsService():any;
+    getCurrentStoryKey():angular.IPromise<string>;
+    tryAgain():void;
+    forceReveal():void;
+    nextStory():angular.IPromise<any>;
+    onCurrentStoryChange(callback):void;
+    start():angular.IPromise<any>;
+    bindTo(scope, property):void;
+  }
 
-      getCurrentStoryKey: function () {
-        var deferred = $q.defer();
+  class GameService implements IGameService {
+    private gameRef:Firebase;
+    private gameObj:planningpoker.domains.Game;
+    private $q:angular.IQService;
+    private participantsService;
+    private storyService;
 
-        gameRef.child('currentStory').ref().once('value', function (snap) {
-          if (angular.isString(snap.val())) {
-            deferred.resolve(snap.val());
-          } else {
-            deferred.reject('No current session');
-          }
+    constructor(gameKey:string, firebase, $q:angular.IQService, $firebaseObject:GameAngularFireObjectService, ParticipantsService, StoryService) {
+      this.$q = $q;
+      this.gameRef = firebase.child('games').child(gameKey);
+      this.gameObj = $firebaseObject(this.gameRef.ref());
+      this.participantsService = ParticipantsService(this.gameRef.child('participants'), gameKey);
+      this.storyService = StoryService(this.gameRef.child('stories'), this.participantsService);
+    }
+
+    key():string {
+      return this.gameRef.key();
+    }
+
+    getState():string {
+      return this.gameObj.state;
+    }
+
+    canBeStarted():boolean {
+      return this.getState() === 'pending';
+    }
+
+    getStoryService():any {
+      return this.storyService;
+    }
+
+    getParticipantsService():any {
+      return this.participantsService;
+    }
+
+    getCurrentStoryKey():angular.IPromise<string> {
+      var deferred = this.$q.defer();
+
+      this.gameRef.child('currentStory').ref().once('value', function (snap) {
+        if (angular.isString(snap.val())) {
+          deferred.resolve(snap.val());
+        } else {
+          deferred.reject('No current session');
+        }
+      });
+
+      return deferred.promise;
+    }
+
+    tryAgain():void {
+      var gs = this;
+      this.getCurrentStoryKey().then(function (storyKey) {
+        var storyRef = gs.storyService.getStoryRef(storyKey);
+        storyRef.ref().update({
+          participants: null,
+          revealed: false
         });
+      });
+    }
 
-        return deferred.promise;
-      },
+    forceReveal():void {
+      var gs = this;
+      this.getCurrentStoryKey().then(function (storyKey) {
+        var storyRef = gs.storyService.getStoryRef(storyKey);
+        storyRef.ref().child('revealed').set(true);
+      });
+    }
 
-      tryAgain: function () {
-        this.getCurrentStoryKey().then(function (storyKey) {
-          var storyRef = storyService.getStoryRef(storyKey);
-          storyRef.ref().update({
-            participants: null,
-            revealed: false
-          });
+    nextStory():angular.IPromise<any> {
+      var deferred = this.$q.defer<any>();
+
+      var gs = this;
+      this.storyService.nextStory().then(function (story) {
+        gs.gameRef.child('currentStory').ref().set(story.$id, function () {
+          deferred.resolve(story);
         });
-      },
+      });
 
-      forceReveal: function () {
-        this.getCurrentStoryKey().then(function (storyKey) {
-          var storyRef = storyService.getStoryRef(storyKey);
-          storyRef.ref().child('revealed').set(true);
-        });
-      },
+      return deferred.promise;
+    }
 
-      nextStory: function () {
-        var deferred = $q.defer();
+    onCurrentStoryChange(callback):void {
+      var gs = this;
+      this.gameRef.child('currentStory').ref().on('value', function (snap) {
+        if (angular.isString(snap.val())) {
+          callback(gs.storyService.getStoryRef(snap.val()).toFirebaseObject());
+        }
+      });
+    }
 
-        storyService.nextStory().then(function (story) {
-          gameRef.child('currentStory').ref().set(story.$id, function (error) {
+    start():angular.IPromise<any> {
+      var deferred = this.$q.defer();
+
+      if (this.canBeStarted()) {
+        var gameService = this;
+        this.gameRef.ref().update({
+          state: 'started'
+        }, function () {
+          gameService.nextStory().then(function (story) {
             deferred.resolve(story);
           });
         });
-
-        return deferred.promise;
-      },
-
-      onCurrentStoryChange: function (callback) {
-        gameRef.child('currentStory').ref().on('value', function (snap) {
-          if (angular.isString(snap.val())) {
-            callback(storyService.getStoryRef(snap.val()).toFirebaseObject());
-          }
-        });
-      },
-
-      start: function () {
-        var deferred = $q.defer();
-
-        if (this.canBeStarted()) {
-          var gameService = this;
-          gameRef.ref().update({
-            state: 'started'
-          }, function () {
-            gameService.nextStory().then(function (story) {
-              deferred.resolve(story);
-            });
-          });
-        } else {
-          deferred.reject('Game can not be started because it is in state: ' + this.getState());
-        }
-
-        return deferred.promise;
-      },
-
-      bindTo: function (scope, property) {
-        gameObj.$bindTo(scope, property);
+      } else {
+        deferred.reject('Game can not be started because it is in state: ' + this.getState());
       }
-    };
-  };
-});
+
+      return deferred.promise;
+    }
+
+    bindTo(scope, property):void {
+      this.gameObj.$bindTo(scope, property);
+    }
+  }
+
+  export interface IGameServiceFactory {
+    createNew(gameTitle:string):angular.IPromise<CreatedGame>;
+    load(gameKey:string):GameService;
+  }
+
+  class GameServiceFactory implements IGameServiceFactory {
+    private firebase;
+    private $q:angular.IQService;
+    private $firebaseObject:GameAngularFireObjectService;
+    private ParticipantsService;
+    private StoryService;
+
+    constructor(firebase, $q:angular.IQService, $firebaseObject:GameAngularFireObjectService, ParticipantsService, StoryService) {
+      this.firebase = firebase;
+      this.$q = $q;
+      this.$firebaseObject = $firebaseObject;
+      this.ParticipantsService = ParticipantsService;
+      this.StoryService = StoryService;
+    }
+
+    createNew(gameTitle:string):angular.IPromise<CreatedGame> {
+      var deferred = this.$q.defer();
+
+      var gamesRef = this.firebase.child('games');
+      var managersRef = this.firebase.child('managers');
+
+      var gameRef = gamesRef.ref().push({
+        title: angular.isDefined(gameTitle) ? gameTitle : null,
+        createdAt: Firebase.ServerValue.TIMESTAMP,
+        state: 'pending'
+      }, function () {
+        var managerRef = managersRef.ref().push({
+          gameId: gameRef.key()
+        }, function () {
+          deferred.resolve(new CreatedGame(gameRef.key(), managerRef.key()));
+        });
+      });
+      return deferred.promise;
+    }
+
+    load(gameKey:string):GameService {
+      return new GameService(gameKey, this.firebase, this.$q, this.$firebaseObject, this.ParticipantsService, this.StoryService);
+    }
+  }
+
+  angular.module('planningpoker').service('GameServiceFactory', GameServiceFactory);
+}
+

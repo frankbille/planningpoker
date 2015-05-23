@@ -16,6 +16,7 @@
 /// <reference path="../../../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../../../typings/angular-ui-router/angular-ui-router.d.ts" />
 /// <reference path="../../../../typings/firebase/firebase.d.ts" />
+/// <reference path="../../services/game.service.ts" />
 
 module planningpoker.creategame {
   'use strict';
@@ -34,12 +35,14 @@ module planningpoker.creategame {
 
     private $state:angular.ui.IStateService;
     private firebase;
+    private GameServiceFactory:planningpoker.services.IGameServiceFactory;
 
-    constructor(firebase, $state:angular.ui.IStateService) {
+    constructor(firebase, $state:angular.ui.IStateService, GameServiceFactory:planningpoker.services.IGameServiceFactory) {
       var vm = this;
 
       this.firebase = firebase;
       this.$state = $state;
+      this.GameServiceFactory = GameServiceFactory;
 
       vm.progressType = 'determinate';
       vm.creating = false;
@@ -50,22 +53,11 @@ module planningpoker.creategame {
       vm.creating = true;
       vm.progressType = 'indeterminate';
 
-      var gamesRef = this.firebase.child('games');
-      var managersRef = this.firebase.child('managers');
-
-      var gameRef = gamesRef.ref().push({
-        title: angular.isDefined(vm.gameName) ? vm.gameName : null,
-        createdAt: Firebase.ServerValue.TIMESTAMP,
-        state: 'pending'
-      }, function () {
-        var managerRef = managersRef.ref().push({
-          gameId: gameRef.key()
-        }, function () {
-          vm.$state.go('game', {
-            gameId: gameRef.key(),
-            managerId: managerRef.key()
-          })
-        });
+      this.GameServiceFactory.createNew(vm.gameName).then(function (createdGame) {
+        vm.$state.go('game', {
+          gameId: createdGame.gameKey,
+          managerId: createdGame.managerKey
+        })
       });
     }
   }

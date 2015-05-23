@@ -24,7 +24,7 @@ module planningpoker.creategame {
     var controller;
 
     beforeEach(() => {
-      controller = new CreateGameController(null, null);
+      controller = new CreateGameController(null, null, null);
     });
 
     describe('$scope.progressType', () => {
