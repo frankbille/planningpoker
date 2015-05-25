@@ -14,10 +14,10 @@ before_install:
 install:
 - npm install
 - tsd update
-- [[ ! -f google-cloud-sdk/path.bash.inc ]] && echo "Downloading google cloud
+- '[[ ! -f google-cloud-sdk/path.bash.inc ]] && echo "Downloading google cloud
   sdk"; wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.zip; unzip
   -qq google-cloud-sdk.zip; google-cloud-sdk/install.sh --usage-reporting false --path-update
-  false --rc-path=~/.bashrc --bash-completion false --override-components=app
+  false --rc-path=~/.bashrc --bash-completion false --override-components=app'
 - google-cloud-sdk/bin/gcloud config set component_manager/fixed_sdk_version 0.9.56
 - google-cloud-sdk/bin/gcloud components update preview app --quiet
 before_script:
