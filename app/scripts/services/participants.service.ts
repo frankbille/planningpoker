@@ -15,78 +15,128 @@
  */
 /// <reference path="../../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../../typings/angularjs/angular-cookies.d.ts" />
+/// <reference path="../../../typings/firebase/firebase.d.ts" />
+/// <reference path="../../../typings/angularfire/angularfire.d.ts" />
+/// <reference path="../domains/participant.ts" />
 
-angular.module('planningpoker').factory('ParticipantsService', function ($cookies:angular.cookies.ICookiesService, firebase, $q:angular.IQService) {
-  return function (participantsRef, gameKey) {
-    var participantsArray = participantsRef.toFirebaseArray();
-    return {
-      remove: function (participant) {
-        var deferred = $q.defer();
+module planningpoker.services {
 
-        var participantRef = participantsRef.child(participant.key);
-        participantRef.ref().remove(function () {
-          deferred.resolve();
-        });
+  export interface IParticipantsService {
+    remove(participant:planningpoker.domains.Participant):angular.IPromise<any>;
+    registerPresence(participantRemovedCallback, noParticipantCallback):void;
+  }
 
-        return deferred.promise;
-      },
+  class ParticipantsService implements IParticipantsService {
+    private participantsRef:Firebase;
+    private participantsArray:AngularFireArray;
+    private $q:angular.IQService;
+    private $cookies:angular.cookies.ICookiesService;
+    private gameKey:string;
+    private firebase;
 
-      registerPresence: function (participantRemovedCallback, noParticipantCallback) {
-        var participantKey = $cookies[gameKey];
-        if (angular.isDefined(participantKey)) {
-          var participantRef = participantsRef.child(participantKey);
-          this._handlePresence(participantRef, participantRemovedCallback);
-        } else {
-          var participantsService = this;
-          noParticipantCallback(function (participant) {
-            participantsArray.$add(participant).then(function (participantRef) {
-              var participantKey = participantRef.key();
-              participantRef.update({
-                key: participantKey
-              });
-              $cookies[gameKey] = participantKey;
-              participantsService._handlePresence(participantRef, participantRemovedCallback);
+    constructor(gameKey:string, participantsRef:Firebase, participantsArray:AngularFireArray, $q:angular.IQService, $cookies:angular.cookies.ICookiesService, firebase) {
+      this.gameKey = gameKey;
+      this.participantsRef = participantsRef;
+      this.participantsArray = participantsArray;
+      this.$q = $q;
+      this.$cookies = $cookies;
+      this.firebase = firebase;
+    }
+
+    remove(participant:planningpoker.domains.Participant):angular.IPromise<any> {
+      var deferred = this.$q.defer();
+
+      var participantRef = this.participantsRef.child(participant.key);
+      participantRef.ref().remove(function () {
+        deferred.resolve();
+      });
+
+      return deferred.promise;
+    }
+
+    registerPresence(participantRemovedCallback, noParticipantCallback):void {
+      var participantKey = this.$cookies[this.gameKey];
+      if (angular.isDefined(participantKey)) {
+        var participantRef = this.participantsRef.child(participantKey);
+        this.handlePresence(participantRef, participantRemovedCallback);
+      } else {
+        var participantsService = this;
+        noParticipantCallback(function (participant) {
+          participantsService.participantsArray.$add(participant).then(function (participantRef) {
+            var participantKey = participantRef.key();
+            participantRef.update({
+              key: participantKey
             });
+            participantsService.$cookies[participantsService.gameKey] = participantKey;
+            participantsService.handlePresence(participantRef, participantRemovedCallback);
           });
-        }
-      },
-
-      loadNumberOfParticipants: function () {
-        var deferred = $q.defer();
-
-        participantsArray.$loaded().then(function () {
-          deferred.resolve(participantsArray.length);
-        });
-
-        return deferred.promise;
-      },
-
-      getCurrentParticipantKey: function () {
-        var participantKey = $cookies[gameKey];
-        if (angular.isDefined(participantKey)) {
-          return participantKey;
-        }
-
-        return null;
-      },
-
-      _handlePresence: function (participantRef, participantRemovedCallback) {
-        participantRef.ref().on('value', function (snap) {
-          if (snap.exists() === false) {
-            delete $cookies[gameKey];
-            participantRemovedCallback();
-          }
-        });
-
-        var myConnectionsRef = participantRef.child('connections');
-        var connectedRef = firebase.getInfoConnectedRef();
-        connectedRef.ref().on('value', function (snap) {
-          if (snap.val() === true) {
-            var con = myConnectionsRef.ref().push(true);
-            con.onDisconnect().remove();
-          }
         });
       }
-    };
-  };
-});
+    }
+
+    loadNumberOfParticipants():angular.IPromise<number> {
+      var deferred = this.$q.defer();
+
+      var ps = this;
+      this.participantsArray.$loaded().then(function () {
+        deferred.resolve(ps.participantsArray.length);
+      });
+
+      return deferred.promise;
+    }
+
+    getCurrentParticipantKey():string {
+      var participantKey = this.$cookies[this.gameKey];
+      if (angular.isDefined(participantKey)) {
+        return participantKey;
+      }
+
+      return null;
+    }
+
+    handlePresence(participantRef, participantRemovedCallback):void {
+      var ps = this;
+      participantRef.ref().on('value', function (snap) {
+        if (snap.exists() === false) {
+          delete ps.$cookies[ps.gameKey];
+          participantRemovedCallback();
+        }
+      });
+
+      var myConnectionsRef = participantRef.child('connections');
+      var connectedRef = this.firebase.getInfoConnectedRef();
+      connectedRef.ref().on('value', function (snap) {
+        if (snap.val() === true) {
+          var con = myConnectionsRef.ref().push(true);
+          con.onDisconnect().remove();
+        }
+      });
+    }
+  }
+
+  export interface IParticipantsServiceFactory {
+    load(participantsRef:Firebase, gameKey:string):IParticipantsService;
+  }
+
+  class ParticipantsServiceFactory implements IParticipantsServiceFactory {
+    private $q:angular.IQService;
+    private $firebaseArray:AngularFireArrayService;
+    private $cookies:angular.cookies.ICookiesService;
+    private firebase;
+
+    constructor($q:angular.IQService, $firebaseArray:AngularFireArrayService, $cookies:angular.cookies.ICookiesService, firebase) {
+      this.$q = $q;
+      this.$firebaseArray = $firebaseArray;
+      this.$cookies = $cookies;
+      this.firebase = firebase;
+    }
+
+    load(participantsRef:Firebase, gameKey:string):IParticipantsService {
+      var participantsArray = this.$firebaseArray(participantsRef);
+      return new ParticipantsService(gameKey, participantsRef, participantsArray, this.$q, this.$cookies, this.firebase);
+    }
+  }
+
+  angular.module('planningpoker').service('ParticipantsServiceFactory', ParticipantsServiceFactory);
+}
+

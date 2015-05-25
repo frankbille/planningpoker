@@ -17,8 +17,10 @@
 
 module planningpoker.domains {
 
-  export interface Game extends AngularFireObject {
-    state:string;
+  export interface Participant extends AngularFireObject {
+    key:string;
+    name:string;
+    email:string;
   }
 
 }

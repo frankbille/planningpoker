@@ -17,6 +17,7 @@
 /// <reference path="../../../typings/firebase/firebase.d.ts" />
 /// <reference path="../../../typings/angularfire/angularfire.d.ts" />
 /// <reference path="../domains/game.ts" />
+/// <reference path="participants.service.ts" />
 
 module planningpoker.services {
 
@@ -53,14 +54,14 @@ module planningpoker.services {
     private gameRef:Firebase;
     private gameObj:planningpoker.domains.Game;
     private $q:angular.IQService;
-    private participantsService;
+    private participantsService:planningpoker.services.IParticipantsService;
     private storyService;
 
-    constructor(gameKey:string, firebase, $q:angular.IQService, $firebaseObject:GameAngularFireObjectService, ParticipantsService, StoryService) {
+    constructor(gameKey:string, firebase, $q:angular.IQService, $firebaseObject:GameAngularFireObjectService, participantsServiceFactory:planningpoker.services.IParticipantsServiceFactory, StoryService) {
       this.$q = $q;
       this.gameRef = firebase.child('games').child(gameKey);
       this.gameObj = $firebaseObject(this.gameRef.ref());
-      this.participantsService = ParticipantsService(this.gameRef.child('participants'), gameKey);
+      this.participantsService = participantsServiceFactory.load(this.gameRef.child('participants').ref(), gameKey);
       this.storyService = StoryService(this.gameRef.child('stories'), this.participantsService);
     }
 
@@ -80,7 +81,7 @@ module planningpoker.services {
       return this.storyService;
     }
 
-    getParticipantsService():any {
+    getParticipantsService():planningpoker.services.IParticipantsService {
       return this.participantsService;
     }
 
@@ -172,14 +173,14 @@ module planningpoker.services {
     private firebase;
     private $q:angular.IQService;
     private $firebaseObject:GameAngularFireObjectService;
-    private ParticipantsService;
+    private participantsServiceFactory:planningpoker.services.IParticipantsServiceFactory;
     private StoryService;
 
-    constructor(firebase, $q:angular.IQService, $firebaseObject:GameAngularFireObjectService, ParticipantsService, StoryService) {
+    constructor(firebase, $q:angular.IQService, $firebaseObject:GameAngularFireObjectService, ParticipantsServiceFactory:planningpoker.services.IParticipantsServiceFactory, StoryService) {
       this.firebase = firebase;
       this.$q = $q;
       this.$firebaseObject = $firebaseObject;
-      this.ParticipantsService = ParticipantsService;
+      this.participantsServiceFactory = ParticipantsServiceFactory;
       this.StoryService = StoryService;
     }
 
@@ -204,7 +205,7 @@ module planningpoker.services {
     }
 
     load(gameKey:string):GameService {
-      return new GameService(gameKey, this.firebase, this.$q, this.$firebaseObject, this.ParticipantsService, this.StoryService);
+      return new GameService(gameKey, this.firebase, this.$q, this.$firebaseObject, this.participantsServiceFactory, this.StoryService);
     }
   }
 
