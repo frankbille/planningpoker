@@ -7,5 +7,5 @@ google-cloud-sdk/bin/gcloud \
     preview app deploy \
     --version "${TRAVIS_BRANCH}" \
     --quiet \
-    --log-http \
+    --force \
     "dist/app.yaml"
