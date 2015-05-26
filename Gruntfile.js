@@ -346,6 +346,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('serve', [
+    'ts',
     'connect:dev',
     'watch'
   ]);
