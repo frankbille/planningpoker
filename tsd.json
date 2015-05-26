@@ -1,36 +1,36 @@
 {
   "version": "v4",
-  "repo": "borisyankov/DefinitelyTyped",
-  "ref": "master",
+  "repo": "frankbille/DefinitelyTyped",
+  "ref": "patch-1",
   "path": "typings",
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "angular-material/angular-material.d.ts": {
-      "commit": "b3834d886a95789e6ab56e8244775ec10c5293d0"
+      "commit": "b67ca7586142caf806555e3bc17ed3586fe22b04"
     },
     "firebase/firebase.d.ts": {
-      "commit": "b3834d886a95789e6ab56e8244775ec10c5293d0"
+      "commit": "b67ca7586142caf806555e3bc17ed3586fe22b04"
     },
     "angularfire/angularfire.d.ts": {
-      "commit": "b3834d886a95789e6ab56e8244775ec10c5293d0"
+      "commit": "b67ca7586142caf806555e3bc17ed3586fe22b04"
     },
     "angularjs/angular.d.ts": {
-      "commit": "b3834d886a95789e6ab56e8244775ec10c5293d0"
+      "commit": "b67ca7586142caf806555e3bc17ed3586fe22b04"
     },
     "jquery/jquery.d.ts": {
-      "commit": "b3834d886a95789e6ab56e8244775ec10c5293d0"
+      "commit": "b67ca7586142caf806555e3bc17ed3586fe22b04"
     },
     "angular-ui-router/angular-ui-router.d.ts": {
-      "commit": "b3834d886a95789e6ab56e8244775ec10c5293d0"
+      "commit": "b67ca7586142caf806555e3bc17ed3586fe22b04"
     },
     "angularjs/angular-cookies.d.ts": {
-      "commit": "b3834d886a95789e6ab56e8244775ec10c5293d0"
+      "commit": "b67ca7586142caf806555e3bc17ed3586fe22b04"
     },
     "angularjs/angular-mocks.d.ts": {
-      "commit": "b3834d886a95789e6ab56e8244775ec10c5293d0"
+      "commit": "b67ca7586142caf806555e3bc17ed3586fe22b04"
     },
     "jasmine/jasmine.d.ts": {
-      "commit": "b3834d886a95789e6ab56e8244775ec10c5293d0"
+      "commit": "b67ca7586142caf806555e3bc17ed3586fe22b04"
     }
   }
 }
