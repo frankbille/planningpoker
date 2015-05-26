@@ -24,6 +24,8 @@ module planningpoker.services {
   export interface IParticipantsService {
     remove(participant:planningpoker.domains.Participant):angular.IPromise<any>;
     registerPresence(participantRemovedCallback, noParticipantCallback):void;
+    loadNumberOfParticipants():angular.IPromise<number>;
+    getCurrentParticipantKey():string;
   }
 
   class ParticipantsService implements IParticipantsService {
@@ -94,7 +96,7 @@ module planningpoker.services {
       return null;
     }
 
-    handlePresence(participantRef, participantRemovedCallback):void {
+    private handlePresence(participantRef, participantRemovedCallback):void {
       var ps = this;
       participantRef.ref().on('value', function (snap) {
         if (snap.exists() === false) {
