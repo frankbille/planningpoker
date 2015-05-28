@@ -167,7 +167,7 @@ module planningpoker.services {
 
   export interface IGameServiceFactory {
     createNew(gameTitle:string):angular.IPromise<CreatedGame>;
-    load(gameKey:string):GameService;
+    load(gameKey:string):IGameService;
   }
 
   class GameServiceFactory implements IGameServiceFactory {
@@ -205,7 +205,7 @@ module planningpoker.services {
       return deferred.promise;
     }
 
-    load(gameKey:string):GameService {
+    load(gameKey:string):IGameService {
       return new GameService(gameKey, this.firebase, this.$q, this.$firebaseObject, this.participantsServiceFactory, this.StoryServiceFactory);
     }
   }
