@@ -42,13 +42,6 @@ module.exports = function (grunt) {
           livereload: true
         }
       },
-      //js: {
-      //  files: ['<%= cfg.app %>/compiled/{,*/}*.js'],
-      //  tasks: ['newer:jshint:all'],
-      //  options: {
-      //    livereload: true
-      //  }
-      //},
       styles: {
         files: ['<%= cfg.app %>/css/{,*/}*.css'],
         tasks: ['newer:copy:styles']
@@ -85,7 +78,7 @@ module.exports = function (grunt) {
           ],
           middleware: function (connect) {
             return [
-              modRewrite(['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg$ /index.html [L]']),
+              modRewrite(['!\\.html|\\.js|\\.ts|\\.svg|\\.css|\\.png|\\.jpg$ /index.html [L]']),
               mountFolder(connect, 'app')
             ];
           }
@@ -148,7 +141,14 @@ module.exports = function (grunt) {
         src: [
           '<%= cfg.app %>/scripts/**/*.ts'
         ],
-        outDir: '<%= cfg.app %>/compiled'
+        outDir: '<%= cfg.app %>/compiled',
+        options: {
+          'module': 'commonjs',
+          'target': 'ES5',
+          'removeComments': true,
+          'declaration': true,
+          'fast': 'always'
+        }
       }
     },
 
@@ -276,30 +276,6 @@ module.exports = function (grunt) {
         cwd: '.tmp',
         src: 'views/{,*/}*.html',
         dest: '.tmp/templates.js'
-      }
-    },
-
-    tsconfig: {
-      make: {
-        options: {
-          /* The main feature is to put files in your tsconfig.json file based on this filesGlob... */
-          filesGlob: [
-            '<%= cfg.app %>/scripts/**/*.ts'
-          ],
-
-          /* Anything added to "additionalOptions" will also be put into the tsconfig.json file */
-          additionalOptions: {
-            compilerOptions: {
-              'emitDecoratorMetadata': true,
-              'module': 'commonjs',
-              'target': 'es5',
-              'removeComments': true,
-              'declaration': true,
-              'outDir': 'app/compiled'
-            },
-          }
-
-        }
       }
     },
 

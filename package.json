@@ -22,7 +22,6 @@
     "grunt-rev": "^0.1.0",
     "grunt-text-replace": "^0.4.0",
     "grunt-ts": "^4.0.1",
-    "grunt-tsconfig": "^0.2.0",
     "grunt-usemin": "^2.3.0",
     "grunt-wiredep": "^1.8.0",
     "jasmine-core": "^2.3.0",
