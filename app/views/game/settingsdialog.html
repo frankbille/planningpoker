@@ -15,16 +15,16 @@
   -->
 
 <md-dialog>
-  <md-dialog-content>
-    <form ng-submit="close()">
+  <form ng-submit="close()">
+    <md-dialog-content>
       <md-input-container style="width:400px">
         <label>Game title</label>
         <input ng-model="game.title" default-focus>
       </md-input-container>
-    </form>
-  </md-dialog-content>
-  <div class="md-actions" layout="row">
-    <span flex></span>
-    <md-button ng-click="close()">Close</md-button>
-  </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+      <span flex></span>
+      <md-button>Close</md-button>
+    </div>
+  </form>
 </md-dialog>

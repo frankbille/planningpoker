@@ -15,18 +15,16 @@
   -->
 
 <md-dialog>
-  <md-dialog-content>
-    <form name="storyForm" ng-submit="saveStory()">
+  <form name="storyForm" ng-submit="saveStory()">
+    <md-dialog-content>
       <md-input-container style="width:400px">
         <label>Story</label>
         <input ng-model="title" name="title" default-focus>
       </md-input-container>
-    </form>
-  </md-dialog-content>
-  <div class="md-actions" layout="row">
-    <span flex></span>
-    <md-button class="md-primary" ng-click="saveStory()">
-      Save
-    </md-button>
-  </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+      <span flex></span>
+      <md-button class="md-primary">Save</md-button>
+    </div>
+  </form>
 </md-dialog>
