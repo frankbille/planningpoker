@@ -57,7 +57,7 @@ module planningpoker.services {
     }
 
     registerPresence(participantRemovedCallback, noParticipantCallback):void {
-      var participantKey = this.$cookies[this.gameKey];
+      var participantKey = this.$cookies.get(this.gameKey);
       if (angular.isDefined(participantKey)) {
         var participantRef = this.participantsRef.child(participantKey);
         this.handlePresence(participantRef, participantRemovedCallback);
@@ -69,7 +69,7 @@ module planningpoker.services {
             participantRef.update({
               key: participantKey
             });
-            participantsService.$cookies[participantsService.gameKey] = participantKey;
+            participantsService.$cookies.put(participantsService.gameKey, participantKey);
             participantsService.handlePresence(participantRef, participantRemovedCallback);
           });
         });
@@ -88,7 +88,7 @@ module planningpoker.services {
     }
 
     getCurrentParticipantKey():string {
-      var participantKey = this.$cookies[this.gameKey];
+      var participantKey = this.$cookies.get(this.gameKey);
       if (angular.isDefined(participantKey)) {
         return participantKey;
       }
@@ -100,7 +100,7 @@ module planningpoker.services {
       var ps = this;
       participantRef.ref().on('value', function (snap) {
         if (snap.exists() === false) {
-          delete ps.$cookies[ps.gameKey];
+          ps.$cookies.remove(ps.gameKey);
           participantRemovedCallback();
         }
       });
