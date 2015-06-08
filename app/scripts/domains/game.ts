@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/// <reference path="../../../typings/angularfire/angularfire.d.ts" />
 
-angular.module('planningpoker').directive('defaultFocus', function ($timeout) {
-  return {
-    link: function (scope, element) {
-      $timeout(function () {
-        element[0].focus();
-      });
-    }
-  };
-});
+module planningpoker.domains {
+
+  export interface Game extends AngularFireObject {
+    state:string;
+  }
+
+}
+

@@ -1,7 +1,17 @@
 app/bower_components
+app/compiled
+app/scripts/**/*.js
+app/scripts/**/*.map
+app/scripts/**/*.ktp.ts
+app/scripts/.baseDir.ts
+test/scripts/**/*.js
+test/scripts/**/*.map
 node_modules
+typings
 dist
+coverage
 .tmp
 *.iml
 .idea
+.tscache
 gcloudauth.json

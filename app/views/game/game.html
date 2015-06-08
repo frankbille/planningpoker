@@ -25,11 +25,11 @@
         <md-tooltip>Create new game</md-tooltip>
         <md-icon md-svg-icon="action:home" style="color: white"></md-icon>
       </md-button>
-      <md-button class="md-icon-button" aria-label="Settings" ng-show="isManager" ng-click="showGameSettings()">
+      <md-button class="md-icon-button" aria-label="Settings" ng-show="isManager" ng-click="showGameSettings($event)">
         <md-tooltip>Game settings</md-tooltip>
         <md-icon md-svg-icon="action:settings" style="color: white"></md-icon>
       </md-button>
-      <md-button class="md-icon-button" aria-label="Share" ng-click="showShareLinks()">
+      <md-button class="md-icon-button" aria-label="Share" ng-click="showShareLinks($event)">
         <md-tooltip>Share</md-tooltip>
         <md-icon md-svg-icon="social:share" style="color: white"></md-icon>
       </md-button>
@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <div ng-show="game.state === 'pending'" layout-padding>
+      <div ng-show="game.state === 'pending'" layout-padding class="md-body-1">
         <p>
           Welcome to Planning Poker. While you wait for the game to start, you may
           look around a bit to familiarize yourself.
@@ -145,7 +145,7 @@
 
         <md-subheader>Participants</md-subheader>
         <md-list-item class="md-2-line" ng-repeat="participant in game.participants"
-                      ng-click="editParticipant(participant)" ng-disabled="!isParticipantEditable(participant)">
+                      ng-click="editParticipant(participant, $event)" ng-disabled="!isParticipantEditable(participant)">
           <img gravatar-src="participant.email" gravatar-size="60" class="md-avatar">
 
           <div class="md-list-item-text">
@@ -159,7 +159,7 @@
 
         <md-subheader>Stories</md-subheader>
         <md-list-item class="md-2-line stories" ng-repeat="(storyKey,story) in game.stories"
-                      ng-click="editStory(storyKey, story)" ng-disabled="!isManager">
+                      ng-click="editStory(storyKey, story, $event)" ng-disabled="!isManager">
           <md-icon md-svg-icon="card:card{{story.score}}" class="md-avatar"></md-icon>
           <div class="md-list-item-text">
             <h3>{{story.title}}</h3>
@@ -168,7 +168,7 @@
         </md-list-item>
         <md-list-item>
           <p>
-            <md-button class="md-fab md-primary" ng-click="addStories()" ng-show="isManager" aria-label="Add stories">
+            <md-button class="md-fab md-primary" ng-click="addStories($event)" ng-show="isManager" aria-label="Add stories">
               <md-icon md-svg-icon="content:add"></md-icon>
             </md-button>
           </p>

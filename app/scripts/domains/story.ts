@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/// <reference path="../../../typings/angularfire/angularfire.d.ts" />
 
-angular.module('planningpoker').controller('ShareLinksCtrl', function ($scope, $state, $mdDialog, stateParams) {
-  $scope.gameLink = $state.href('game', {
-    gameId: stateParams.gameId
-  }, {
-    absolute: true,
-    inherit: false
-  });
+module planningpoker.domains {
 
-  if (angular.isDefined(stateParams.managerId)) {
-    $scope.managerLink = $state.href('game', {
-      gameId: stateParams.gameId,
-      managerId: stateParams.managerId
-    }, {
-      absolute: true,
-      inherit: false
-    });
+  export interface Story extends AngularFireObject {
+    title:string;
+    state:string;
+    score:number;
+    revealed:boolean;
+    participants:{[s:string]: number};
   }
 
-  $scope.close = function () {
-    $mdDialog.cancel();
-  };
-});
+}
+

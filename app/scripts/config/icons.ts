@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../typings/angular-material/angular-material.d.ts" />
 
-angular.module('planningpoker').config(function ($mdIconProvider) {
+angular.module('planningpoker').config(function ($mdIconProvider:angular.material.MDIconProvider) {
   $mdIconProvider
-    .iconSet('action', '/images/action-icons.svg', 24)
-    .iconSet('content', '/images/content-icons.svg', 24)
-    .iconSet('navigation', '/images/navigation-icons.svg', 24)
-    .iconSet('social', '/images/social-icons.svg', 24)
+    .iconSet('action', '/images/action-icons.svg', "24")
+    .iconSet('content', '/images/content-icons.svg', "24")
+    .iconSet('navigation', '/images/navigation-icons.svg', "24")
+    .iconSet('social', '/images/social-icons.svg', "24")
     .icon('card:card0', '/images/card-0.svg')
     .icon('card:card1', '/images/card-1.svg')
     .icon('card:card2', '/images/card-2.svg')

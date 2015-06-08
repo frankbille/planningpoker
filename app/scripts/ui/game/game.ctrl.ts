@@ -13,8 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/// <reference path="../../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../../typings/angularjs/angular-cookies.d.ts" />
+/// <reference path="../../../../typings/angular-material/angular-material.d.ts" />
+/// <reference path="../../../../typings/angular-ui-router/angular-ui-router.d.ts" />
+/// <reference path="../../services/game.service.ts" />
 
-angular.module('planningpoker').controller('GameCtrl', function ($scope, GameService, $cookies, firebase, $stateParams, $state, $mdDialog, $mdBottomSheet) {
+interface GameStateParamsService extends angular.ui.IStateParamsService {
+  gameId: string;
+  managerId: string;
+  participantId: string;
+}
+
+angular.module('planningpoker').controller('GameCtrl', function ($scope, GameServiceFactory:planningpoker.services.IGameServiceFactory, $cookies:angular.cookies.ICookiesService, firebase, $stateParams:GameStateParamsService, $state:angular.ui.IStateService, $mdDialog:angular.material.MDDialogService, $mdBottomSheet:angular.material.MDBottomSheetService) {
   // Start by checking the rights
   if (angular.isDefined($stateParams.managerId)) {
     var managerRef = firebase.child('managers').child($stateParams.managerId);
@@ -32,8 +43,7 @@ angular.module('planningpoker').controller('GameCtrl', function ($scope, GameSer
   }
 
   // Load up the game itself
-  var gameRef = firebase.child('games').child($stateParams.gameId);
-  var gameService = GameService(gameRef);
+  var gameService = GameServiceFactory.load($stateParams.gameId);
   gameService.bindTo($scope, 'game');
 
   addGameHandling($scope, gameService);
@@ -80,11 +90,12 @@ function addGameHandling($scope, gameService) {
 }
 
 function addShareLinks($scope, $mdDialog, $stateParams) {
-  $scope.showShareLinks = function () {
+  $scope.showShareLinks = function (ev) {
     $mdDialog.show({
       templateUrl: '/views/game/sharelinksdialog.html',
       controller: 'ShareLinksCtrl',
       clickOutsideToClose: true,
+      targetEvent: ev,
       resolve: {
         stateParams: function () {
           return $stateParams;
@@ -95,12 +106,13 @@ function addShareLinks($scope, $mdDialog, $stateParams) {
 }
 
 function addSettingsLink($scope, $mdDialog) {
-  $scope.showGameSettings = function () {
+  $scope.showGameSettings = function (ev) {
     $mdDialog.show({
       templateUrl: '/views/game/settingsdialog.html',
       controller: 'SettingsDialogCtrl',
       clickOutsideToClose: true,
       focusOnOpen: false,
+      targetEvent: ev,
       resolve: {
         game: function () {
           return $scope.game;
@@ -131,7 +143,7 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameService,
     return participant.key === $cookies[gameService.key()] || $scope.isManager;
   };
 
-  $scope.editParticipant = function (participant) {
+  $scope.editParticipant = function (participant, ev) {
     if ($scope.isParticipantEditable(participant)) {
       var dialogScope = $scope.$new(true);
       dialogScope.name = participant.name;
@@ -142,7 +154,8 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameService,
         controller: 'EditParticipantCtrl',
         clickOutsideToClose: true,
         focusOnOpen: false,
-        scope: dialogScope
+        scope: dialogScope,
+        targetEvent: ev
       }).then(function (changedParticipant) {
         participant.name = changedParticipant.name;
         participant.email = changedParticipant.email;
@@ -187,12 +200,13 @@ function addParticipants($scope, $cookies, $stateParams, $mdDialog, gameService,
 }
 
 function addStories($scope, $mdDialog, gameService) {
-  $scope.editStory = function (storyKey, story) {
+  $scope.editStory = function (storyKey, story, ev) {
     if ($scope.isManager) {
       $mdDialog.show({
         templateUrl: '/views/game/editstory.html',
         controller: 'EditStoryCtrl',
         focusOnOpen: false,
+        targetEvent: ev,
         resolve: {
           story: function () {
             return story;
@@ -208,11 +222,12 @@ function addStories($scope, $mdDialog, gameService) {
     }
   };
 
-  $scope.addStories = function () {
+  $scope.addStories = function (ev) {
     $mdDialog.show({
       templateUrl: '/views/game/addstories.html',
       controller: 'AddStoriesCtrl',
       focusOnOpen: false,
+      targetEvent: ev,
       resolve: {
         gameService: function () {
           return gameService;

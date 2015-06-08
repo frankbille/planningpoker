@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/// <reference path="../../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../../typings/angular-material/angular-material.d.ts" />
 
-angular.module('planningpoker', [
-  'ngCookies',
-  'ngMaterial',
-  'ngMessages',
-  'firebase',
-  'ui.router',
-  'ui.gravatar'
-]).config(function ($locationProvider) {
-  $locationProvider.html5Mode(true);
+angular.module('planningpoker').controller('AddStoriesCtrl', function ($scope, $mdDialog:angular.material.MDDialogService, gameService) {
+  $scope.saveStories = function () {
+    if ($scope.storiesForm.$valid) {
+      gameService.getStoryService().addStories($scope.stories);
+      $mdDialog.hide();
+    }
+  };
+
+  $scope.cancel = function () {
+    $mdDialog.cancel();
+  };
 });

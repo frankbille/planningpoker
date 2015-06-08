@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../typings/angular-ui-router/angular-ui-router.d.ts" />
 
-angular.module('planningpoker').config(function ($stateProvider, $urlRouterProvider) {
+angular.module('planningpoker').config(function ($stateProvider:angular.ui.IStateProvider, $urlRouterProvider:angular.ui.IUrlRouterProvider) {
   $urlRouterProvider.otherwise('/');
 
   $stateProvider
     .state('creategame', {
       url: '/',
       templateUrl: '/views/creategame/creategame.html',
-      controller: 'CreateGameCtrl'
+      controller: 'CreateGameCtrl',
+      controllerAs: 'vm'
     })
     .state('game', {
       url: '/:gameId?managerId',

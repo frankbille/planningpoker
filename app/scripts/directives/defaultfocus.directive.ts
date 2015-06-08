@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/// <reference path="../../../typings/angularjs/angular.d.ts" />
 
-angular.module('planningpoker').config(function (gravatarServiceProvider) {
-  gravatarServiceProvider.defaults = {
-    "default": 'monsterid'
-  }
+angular.module('planningpoker').directive('defaultFocus', function ($timeout:ng.ITimeoutService) {
+  return {
+    link: function (scope:ng.IScope, element:ng.IAugmentedJQuery) {
+      $timeout(function () {
+        element[0].focus();
+      });
+    }
+  };
 });

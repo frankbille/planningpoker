@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 Frank Bille
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 'use strict';
 
 module.exports = function (grunt) {
@@ -19,9 +35,9 @@ module.exports = function (grunt) {
     },
 
     watch: {
-      js: {
-        files: ['<%= cfg.app %>/scripts/{,*/}*.js'],
-        tasks: ['newer:jshint:all'],
+      ts: {
+        files: ['<%= cfg.app %>/scripts/**/*.ts'],
+        tasks: ['ts:build'],
         options: {
           livereload: true
         }
@@ -60,9 +76,9 @@ module.exports = function (grunt) {
             '.tmp',
             '<%= cfg.app %>'
           ],
-          middleware: function(connect) {
+          middleware: function (connect) {
             return [
-              modRewrite (['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg$ /index.html [L]']),
+              modRewrite(['!\\.html|\\.js|\\.ts|\\.svg|\\.css|\\.png|\\.jpg$ /index.html [L]']),
               mountFolder(connect, 'app')
             ];
           }
@@ -76,9 +92,9 @@ module.exports = function (grunt) {
           base: [
             '<%= cfg.dist %>'
           ],
-          middleware: function(connect) {
+          middleware: function (connect) {
             return [
-              modRewrite (['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg$ /index.html [L]']),
+              modRewrite(['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg$ /index.html [L]']),
               mountFolder(connect, 'app')
             ];
           }
@@ -92,7 +108,12 @@ module.exports = function (grunt) {
           dot: true,
           src: [
             '.tmp',
-            '<%= cfg.dist %>/*',
+            'coverage',
+            '<%= cfg.dist %>',
+            '<%= cfg.app %>/compiled',
+            '<%= cfg.app %>/scripts/**/*.js',
+            '<%= cfg.app %>/scripts/**/*.map',
+            '<%= cfg.app %>/scripts/**/*.ktp.ts',
             '!<%= cfg.dist %>/.git*'
           ]
         }]
@@ -112,6 +133,22 @@ module.exports = function (grunt) {
         //    }
         //  }
         //}
+      }
+    },
+
+    ts: {
+      build: {
+        src: [
+          '<%= cfg.app %>/scripts/**/*.ts'
+        ],
+        outDir: '<%= cfg.app %>/compiled',
+        options: {
+          'module': 'commonjs',
+          'target': 'ES5',
+          'removeComments': true,
+          'declaration': true,
+          'fast': 'always'
+        }
       }
     },
 
@@ -185,11 +222,11 @@ module.exports = function (grunt) {
             'gae.go'
           ]
         }, {
-          expand: true,
-          cwd: '.tmp/images',
-          dest: '<%= cfg.dist %>/images',
-          src: ['generated/*']
-        }]
+            expand: true,
+            cwd: '.tmp/images',
+            dest: '<%= cfg.dist %>/images',
+            src: ['generated/*']
+          }]
       },
       styles: {
         expand: true,
@@ -218,7 +255,7 @@ module.exports = function (grunt) {
 
     // Allow the use of non-minsafe AngularJS files. Automatically makes it
     // minsafe compatible so Uglify does not destroy the ng references
-    ngmin: {
+    ngAnnotate: {
       dist: {
         files: [{
           expand: true,
@@ -251,12 +288,29 @@ module.exports = function (grunt) {
           from: 'https://planningpokerappdev.firebaseio.com',
           to: '<%= cfg.firebaseUrl %>'
         }, {
-          from: '{SHA}',
-          to: '<%= gitinfo.local.branch.current.SHA %>'
-        }, {
-          from: '{SHA-SHORT}',
-          to: '<%= gitinfo.local.branch.current.shortSHA %>'
-        }]
+            from: '{SHA}',
+            to: '<%= gitinfo.local.branch.current.SHA %>'
+          }, {
+            from: '{SHA-SHORT}',
+            to: '<%= gitinfo.local.branch.current.shortSHA %>'
+          }]
+      }
+    },
+
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js',
+        singleRun: true
+      }
+    },
+
+    coveralls: {
+      options: {
+        debug: false,
+        coverageDir: 'coverage',
+        dryRun: false,
+        force: false,
+        recursive: true
       }
     }
   });
@@ -268,6 +322,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('serve', [
+    'ts',
     'connect:dev',
     'watch'
   ]);
@@ -275,13 +330,14 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'gitinfo',
     'wiredep',
+    'ts:build',
     'useminPrepare',
     'copy:styles',
     'autoprefixer',
     'htmlmin',
     'ngtemplates',
     'concat',
-    'ngmin',
+    'ngAnnotate',
     'copy:dist',
     'cssmin',
     'uglify',
@@ -289,10 +345,16 @@ module.exports = function (grunt) {
     'usemin'
   ]);
 
+  grunt.registerTask('test', [
+    'karma:unit'
+  ]);
+
   grunt.registerTask('travis-build', [
     'clean',
     'build',
-    'replace:dist'
+    'replace:dist',
+    'karma:unit',
+    'coveralls'
   ]);
 
   grunt.registerTask('default', [

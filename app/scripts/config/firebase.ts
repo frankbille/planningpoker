@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../typings/firebase/firebase.d.ts" />
+/// <reference path="../../../typings/angularfire/angularfire.d.ts" />
 
-angular.module('planningpoker').factory('firebase', function ($firebaseObject, $firebaseArray) {
+angular.module('planningpoker').factory('firebase', function ($firebaseObject:AngularFireObjectService, $firebaseArray:AngularFireArrayService) {
   var appRef = new Firebase('https://planningpokerappdev.firebaseio.com');
 
   var firebaseRef = function (ref) {
