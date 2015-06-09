@@ -9,3 +9,6 @@ script:
 - npm run build
 after_success:
 - "./travis-ci-deploy.sh"
+cache:
+  directories:
+    - node_modules
