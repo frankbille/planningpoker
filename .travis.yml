@@ -6,6 +6,6 @@ branches:
     - master
     - develop
 script:
-- npm build
+- npm run build
 after_success:
 - "./travis-ci-deploy.sh"
