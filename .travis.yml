@@ -9,6 +9,7 @@ script:
 - npm run build
 after_success:
 - "./travis-ci-deploy.sh"
+sudo: false
 cache:
   directories:
     - node_modules
