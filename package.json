@@ -11,6 +11,7 @@
     "url": "https://github.com/frankbille/planningpoker/issues"
   },
   "devDependencies": {
+    "bower": "^1.4.1",
     "connect-modrewrite": "^0.7.11",
     "firebase-tools": "^1.2.0",
     "grunt": "^0.4.5",
