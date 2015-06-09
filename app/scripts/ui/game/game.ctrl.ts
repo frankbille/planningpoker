@@ -206,6 +206,7 @@ function addStories($scope, $mdDialog, gameService) {
         templateUrl: '/views/game/editstory.html',
         controller: 'EditStoryCtrl',
         focusOnOpen: false,
+        clickOutsideToClose: true,
         targetEvent: ev,
         resolve: {
           story: function () {
@@ -227,6 +228,7 @@ function addStories($scope, $mdDialog, gameService) {
       templateUrl: '/views/game/addstories.html',
       controller: 'AddStoriesCtrl',
       focusOnOpen: false,
+      clickOutsideToClose: true,
       targetEvent: ev,
       resolve: {
         gameService: function () {
