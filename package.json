@@ -1,8 +1,18 @@
 {
   "name": "planningpoker",
   "version": "1.0.0",
+  "license": "Apache-2.0",
+  "author": "Frank Bille <planningpoker@frankbille.dk>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frankbille/planningpoker"
+  },
+  "bugs": {
+    "url": "https://github.com/frankbille/planningpoker/issues"
+  },
   "devDependencies": {
     "connect-modrewrite": "^0.7.11",
+    "firebase-tools": "^1.2.0",
     "grunt": "^0.4.5",
     "grunt-angular-templates": "^0.5.5",
     "grunt-autoprefixer": "^0.8.1",
@@ -35,5 +45,8 @@
   },
   "engines": {
     "node": ">=0.10.0"
+  },
+  "scripts": {
+    "postinstall": "bower install"
   }
 }

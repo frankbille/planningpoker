@@ -1,10 +1,7 @@
 #!/bin/bash
-google-cloud-sdk/bin/gcloud auth activate-service-account \
-    "${GAE_CLIENT_ACCOUNT}" \
-    --key-file gcloudauth.json
-google-cloud-sdk/bin/gcloud \
-    --project "${GAE_PROJECT_ID}" \
-    preview app deploy \
-    --version "${TRAVIS_BRANCH}" \
-    --quiet \
-    "dist/app.yaml"
+node_modules/firebase-tools/bin/firebase login --email ${FIREBASE_EMAIL} --password ${FIREBASE_PASSWORD}
+firebase=planningpokerapp
+if [ "${TRAVIS_BRANCH}" -eq "develop" ] then
+    firebase=planningpokerappdev
+fi;
+node_modules/firebase-tools/bin/firebase deploy --firebase ${firebase}
