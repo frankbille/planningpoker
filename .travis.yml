@@ -5,15 +5,7 @@ branches:
   only:
     - master
     - develop
-before_install:
-- npm install -g grunt-cli
-- npm install -g bower
-- npm install -g tsd
-install:
-- npm install
-- tsd update
-before_script:
-- bower install
-- grunt travis-build -v
+script:
+- npm build
 after_success:
 - "./travis-ci-deploy.sh"
